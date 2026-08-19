@@ -1,23 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { AppHeader } from "@/components/app-header";
 import { dailyCompass } from "@/lib/demo-data";
 import { readMoments, readProfile } from "@/lib/storage";
-import type { Moment, UserProfile } from "@/types";
+
+const subscribeToClient = () => () => undefined;
 
 export default function TodayPage() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [latestMoment, setLatestMoment] = useState<Moment | null>(null);
+  const hydrated = useSyncExternalStore(subscribeToClient, () => true, () => false);
   const [showWhy, setShowWhy] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setProfile(readProfile());
-    setLatestMoment(readMoments()[0] ?? null);
-    setHydrated(true);
-  }, []);
+  const profile = hydrated ? readProfile() : null;
+  const latestMoment = hydrated ? readMoments()[0] ?? null : null;
 
   const formattedDate = useMemo(
     () => new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long" }).format(new Date()),
