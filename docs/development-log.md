@@ -53,11 +53,13 @@ Use one implementation branch to reduce PR overhead under deadline pressure. Kee
 
 Branch: `agent/mvp-vertical-slice`
 
-The first code pass intentionally implements the complete judge journey before visual micro-polish. CI is configured to run lint plus a production Next.js build on the branch/PR.
+Draft PR: `#1 — Build AstroLive Compass MVP vertical slice`
+
+The first code pass intentionally implements the complete judge journey before visual micro-polish. CI runs lint plus a production Next.js build on the branch/PR.
 
 ## Slice 0 — Foundation
 
-Status: implemented; CI validation pending
+Status: implemented; lint + production build passed
 
 Implemented:
 
@@ -77,7 +79,7 @@ The prototype deliberately removes API, authentication, and backend failure mode
 
 ## Slice 1 — Landing + Onboarding
 
-Status: implemented; CI/browser validation pending
+Status: implemented; compiler validated; browser QA pending
 
 Implemented:
 
@@ -95,7 +97,7 @@ The onboarding avoids account creation so a judge can reach the product value qu
 
 ## Slice 2 — Today / Compass
 
-Status: implemented; CI/browser validation pending
+Status: implemented; compiler validated; browser QA pending
 
 Implemented:
 
@@ -114,7 +116,7 @@ Today is the retention mechanism: AstroLive gains a lightweight recurring use ca
 
 ## Slice 3 — Plan a Moment
 
-Status: implemented; CI/browser validation pending
+Status: implemented; compiler validated; browser QA pending
 
 Implemented:
 
@@ -133,7 +135,7 @@ Plan translates astrology into a concrete job-to-be-done. The recommendation rem
 
 ## Slice 4 — Shared Moment
 
-Status: implemented; CI/browser validation pending
+Status: implemented; compiler validated; browser QA pending
 
 Implemented:
 
@@ -151,7 +153,7 @@ Sharing is structural rather than decorative: the recipient receives a useful st
 
 ## Slice 5 — Expert Handoff
 
-Status: implemented; CI/browser validation pending
+Status: implemented; compiler validated; browser QA pending
 
 Implemented:
 
@@ -178,6 +180,8 @@ Completed so far:
 - localStorage corruption tolerance
 - share payload validation
 - public-facing README
+- React lint cleanup for browser-state hydration/read patterns
+- TypeScript configuration synchronized with Next.js generated type paths
 
 Still required:
 
@@ -190,23 +194,74 @@ Still required:
 
 Status: started
 
-Validation infrastructure:
+Completed validation evidence:
 
-- GitHub Actions workflow installs dependencies, runs ESLint, and performs a production Next.js build
-- draft PR will be used as the auditable review/CI surface
+- GitHub Actions installs the project successfully
+- ESLint passes
+- Next.js production build passes
+- TypeScript validation passes as part of the production build
+- all intended routes are discovered by the production compiler:
+  - `/`
+  - `/onboarding`
+  - `/today`
+  - `/plan`
+  - `/experts`
+  - `/together/[id]`
 
 Still required:
 
-- passing CI evidence
 - public Vercel production URL
 - logged-out/incognito canonical smoke path
 - 1440px report screenshots + mobile evidence
 - final report/PDF and submission-link verification
 
-## Known limitations after first code pass
+## CI evidence — 19 August 2026
+
+### First PR validation run
+
+Result: **failed at ESLint; build correctly skipped**.
+
+The failure exposed four React code-quality issues rather than a dependency or architecture failure. React's lint rules rejected synchronous state updates inside mount effects in:
+
+- onboarding profile restoration
+- planner profile restoration
+- Today profile/moment hydration
+- Shared Moment URL decoding
+
+There was also one PostCSS anonymous-default-export warning.
+
+### Corrective work
+
+The failures were fixed without disabling lint rules:
+
+- Onboarding no longer rereads saved profile state on mount; the screen starts intentionally clean and retains the one-click demo path.
+- Plan reads the creator profile only at the moment a share link is created.
+- Today uses hydration-safe client detection rather than effect-driven synchronous state mirroring.
+- Shared Moment derives its decoded payload from the route parameter instead of copying derived data into state.
+- PostCSS config now exports a named config constant.
+
+### Second PR validation run
+
+Result: **passed**.
+
+Evidence from GitHub Actions:
+
+- dependency installation: success
+- ESLint: success
+- optimized production compilation: success
+- TypeScript: success
+- static/dynamic route generation: success
+
+The build reported Next.js `16.2.12` and compiled the optimized application successfully. `/`, `/onboarding`, `/plan`, and `/today` are statically generated; `/experts` and `/together/[id]` are rendered dynamically as designed.
+
+Report-ready takeaway:
+
+CI provided a useful engineering feedback loop before deployment: the first run caught unnecessary effect-driven state synchronization, the implementation was simplified, and the corrected branch then passed lint, TypeScript, and the production compiler. This is concrete evidence that the prototype was iterated and validated rather than only visually mocked.
+
+## Known limitations after first validated code pass
 
 - no production astrology calculation; fixtures are intentionally deterministic
 - no real accounts/backend/notifications
 - shared payload is readable by anyone who has the URL, so it intentionally excludes birth details
 - expert profiles are samples; the external handoff opens AstroLive rather than simulating a completed consultation
-- production deployment has not yet been verified at this point in the log
+- production deployment/browser interaction has not yet been verified at this point in the log
