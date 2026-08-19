@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import {
@@ -16,7 +16,6 @@ import type {
   Moment,
   MomentCategory,
   PreferredPeriod,
-  UserProfile,
 } from "@/types";
 
 const categories = Object.keys(categoryLabels) as MomentCategory[];
@@ -35,7 +34,6 @@ function localDate() {
 
 export default function PlanPage() {
   const router = useRouter();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [category, setCategory] = useState<MomentCategory | null>(null);
   const [date, setDate] = useState(localDate);
   const [preferredPeriod, setPreferredPeriod] = useState<PreferredPeriod>("flexible");
@@ -46,8 +44,6 @@ export default function PlanPage() {
   const [addingSomeone, setAddingSomeone] = useState(false);
   const [collaborator, setCollaborator] = useState("");
   const [error, setError] = useState("");
-
-  useEffect(() => setProfile(readProfile()), []);
 
   const expertHref = useMemo(() => {
     if (!result) return "/experts";
@@ -102,7 +98,7 @@ export default function PlanPage() {
     }
     const encoded = encodeSharedMoment({
       version: 1,
-      creator: profile?.firstName || "Aarav",
+      creator: readProfile()?.firstName || "Aarav",
       collaborator: cleanName,
       category: result.category,
       title: result.title || categoryLabels[result.category],
