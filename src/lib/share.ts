@@ -31,6 +31,11 @@ function base64UrlToUtf8(value: string) {
   return new TextDecoder().decode(bytes);
 }
 
+function isValidIsoDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  return !Number.isNaN(new Date(`${value}T12:00:00Z`).getTime());
+}
+
 export function encodeSharedMoment(payload: SharedMomentPayload) {
   return utf8ToBase64Url(JSON.stringify(payload));
 }
@@ -44,6 +49,7 @@ export function decodeSharedMoment(encoded: string): SharedMomentPayload | null 
       !parsed.collaborator ||
       !parsed.title ||
       !parsed.date ||
+      !isValidIsoDate(parsed.date) ||
       !parsed.category ||
       !allowedCategories.includes(parsed.category) ||
       !parsed.preferredPeriod ||
@@ -60,7 +66,7 @@ export function decodeSharedMoment(encoded: string): SharedMomentPayload | null 
       collaborator: String(parsed.collaborator).slice(0, 60),
       category: parsed.category,
       title: String(parsed.title).slice(0, 120),
-      date: String(parsed.date).slice(0, 20),
+      date: parsed.date,
       preferredPeriod: parsed.preferredPeriod,
       importance: parsed.importance,
     };
