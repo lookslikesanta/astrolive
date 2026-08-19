@@ -55,11 +55,11 @@ Branch: `agent/mvp-vertical-slice`
 
 Draft PR: `#1 — Build AstroLive Compass MVP vertical slice`
 
-The first code pass intentionally implements the complete judge journey before visual micro-polish. CI runs lint plus a production Next.js build on the branch/PR.
+The first code pass intentionally implements the complete judge journey before visual micro-polish. CI runs lint, an optimized production build, and the canonical browser journey.
 
 ## Slice 0 — Foundation
 
-Status: implemented; lint + production build passed
+Status: implemented and validated
 
 Implemented:
 
@@ -79,7 +79,7 @@ The prototype deliberately removes API, authentication, and backend failure mode
 
 ## Slice 1 — Landing + Onboarding
 
-Status: implemented; compiler validated; browser QA pending
+Status: implemented and browser validated
 
 Implemented:
 
@@ -97,7 +97,7 @@ The onboarding avoids account creation so a judge can reach the product value qu
 
 ## Slice 2 — Today / Compass
 
-Status: implemented; compiler validated; browser QA pending
+Status: implemented and browser validated
 
 Implemented:
 
@@ -116,7 +116,7 @@ Today is the retention mechanism: AstroLive gains a lightweight recurring use ca
 
 ## Slice 3 — Plan a Moment
 
-Status: implemented; compiler validated; browser QA pending
+Status: implemented and browser validated
 
 Implemented:
 
@@ -135,7 +135,7 @@ Plan translates astrology into a concrete job-to-be-done. The recommendation rem
 
 ## Slice 4 — Shared Moment
 
-Status: implemented; compiler validated; browser QA pending
+Status: implemented and browser validated
 
 Implemented:
 
@@ -153,7 +153,7 @@ Sharing is structural rather than decorative: the recipient receives a useful st
 
 ## Slice 5 — Expert Handoff
 
-Status: implemented; compiler validated; browser QA pending
+Status: implemented and browser validated
 
 Implemented:
 
@@ -169,9 +169,9 @@ The revenue mechanism is contextual escalation: high-intent moments can move fro
 
 ## Slice 6 — Integration Polish
 
-Status: started
+Status: substantially complete; deployment QA remains
 
-Completed so far:
+Completed:
 
 - mobile-first responsive breakpoints
 - visible focus styling and semantic labels
@@ -182,38 +182,55 @@ Completed so far:
 - public-facing README
 - React lint cleanup for browser-state hydration/read patterns
 - TypeScript configuration synchronized with Next.js generated type paths
+- evergreen landing preview copy (`Today` rather than a hard-coded weekday)
+- Playwright desktop + mobile browser validation
+- no-horizontal-overflow assertions at report screenshot checkpoints
+- console-error and unhandled-page-error assertions
+- report-ready screenshots for Landing, Today, Plan result, Shared Moment, and Expert handoff
+
+Visual QA outcome:
+
+- desktop layout preserves clear hierarchy and the two-column planning/dashboard model where space allows
+- mobile collapses cleanly to one column without clipping or horizontal scrolling
+- long Plan content remains readable and controls stay usable on mobile
+- Shared Moment clearly prioritizes the combined recommendation, invitation CTA, and privacy disclosure
+- Expert handoff keeps context visible before the sample expert profiles and does not imply a fake completed consultation
 
 Still required:
 
-- production/browser visual QA
-- interaction QA at target viewports
-- accessibility keyboard sweep
-- screenshots and final visual fixes
+- public deployment visual/smoke QA
+- final keyboard-only accessibility sweep on the public deployment
 
 ## Slice 7 — Verification + Submission Assets
 
-Status: started
+Status: in progress
 
 Completed validation evidence:
 
-- GitHub Actions installs the project successfully
+- dependency installation succeeds in GitHub Actions
 - ESLint passes
-- Next.js production build passes
+- optimized Next.js production build passes
 - TypeScript validation passes as part of the production build
-- all intended routes are discovered by the production compiler:
+- intended routes compile successfully:
   - `/`
   - `/onboarding`
   - `/today`
   - `/plan`
   - `/experts`
   - `/together/[id]`
+- canonical browser journey passes in Chromium at 1440×900
+- canonical browser journey passes in Pixel 7 mobile emulation
+- no horizontal overflow at captured checkpoints
+- no browser console errors or unhandled page errors during the canonical journey
+- five full-page evidence screenshots captured per viewport
 
 Still required:
 
 - public Vercel production URL
-- logged-out/incognito canonical smoke path
-- 1440px report screenshots + mobile evidence
-- final report/PDF and submission-link verification
+- logged-out/incognito smoke test against that public URL
+- final screenshot selection/captions for the report
+- final 8–9+ page report/PDF
+- final public-link and submission-form verification
 
 ## CI evidence — 19 August 2026
 
@@ -240,7 +257,7 @@ The failures were fixed without disabling lint rules:
 - Shared Moment derives its decoded payload from the route parameter instead of copying derived data into state.
 - PostCSS config now exports a named config constant.
 
-### Second PR validation run
+### Second compiler validation run
 
 Result: **passed**.
 
@@ -254,14 +271,64 @@ Evidence from GitHub Actions:
 
 The build reported Next.js `16.2.12` and compiled the optimized application successfully. `/`, `/onboarding`, `/plan`, and `/today` are statically generated; `/experts` and `/together/[id]` are rendered dynamically as designed.
 
+### Browser validation infrastructure
+
+The Browser plugin was not available in the development runtime, so browser verification was moved into repeatable Playwright CI rather than skipped.
+
+The Playwright suite runs the same canonical journey on:
+
+- desktop Chromium at 1440×900
+- Pixel 7 mobile emulation
+
+Canonical journey:
+
+`Landing → Try demo → Onboarding → Use demo profile → Today → Plan → Difficult conversation → Important → Generate → Save → Add Mira → Shared Moment → Ask an expert → Experts`
+
+At Landing, Today, Plan result, Shared Moment, and Expert handoff, the test captures a full-page screenshot and asserts that the document does not exceed the viewport width. The test also records console errors and unhandled page errors and fails if either list is non-empty.
+
+### First browser run
+
+Result: **test automation false-negative**.
+
+Both desktop and mobile reached the Plan screen correctly, but the locator for the `Important` button used a non-exact accessible-name match. It therefore matched both the actual `Important` control and an unrelated category card whose accessible text contained the word "important".
+
+This was a test-selector ambiguity, not a product failure. The evidence and trace were retained rather than discarded.
+
+Correction:
+
+- changed the `Important` selector to an exact accessible-name match
+- tightened other action selectors where ambiguity could occur
+- normalized screenshot capture to scroll to the top before full-page capture
+
+### Final browser run
+
+GitHub Actions run: `32248141363`
+
+Result: **passed end-to-end**.
+
+Passed steps:
+
+- dependency installation
+- ESLint
+- optimized production build
+- Playwright Chromium installation
+- canonical desktop journey
+- canonical mobile journey
+- browser evidence artifact upload
+
+Browser evidence artifact: `browser-evidence` (`9363414145`), retained by CI for seven days from the run.
+
+The successful evidence contains ten product screenshots: five checkpoints on desktop and the same five on mobile.
+
 Report-ready takeaway:
 
-CI provided a useful engineering feedback loop before deployment: the first run caught unnecessary effect-driven state synchronization, the implementation was simplified, and the corrected branch then passed lint, TypeScript, and the production compiler. This is concrete evidence that the prototype was iterated and validated rather than only visually mocked.
+The validation history gives the report a concrete engineering narrative: CI first caught unnecessary React state synchronization; the implementation was simplified; the production compiler passed; browser automation was then introduced; an ambiguous test locator was diagnosed as a QA issue rather than hidden; and the corrected journey passed on both desktop and mobile with screenshot, overflow, console, and runtime-error checks.
 
-## Known limitations after first validated code pass
+## Known limitations after validated browser pass
 
 - no production astrology calculation; fixtures are intentionally deterministic
 - no real accounts/backend/notifications
 - shared payload is readable by anyone who has the URL, so it intentionally excludes birth details
 - expert profiles are samples; the external handoff opens AstroLive rather than simulating a completed consultation
-- production deployment/browser interaction has not yet been verified at this point in the log
+- no public production deployment has been verified yet
+- public-deployment keyboard/accessibility smoke testing remains open
