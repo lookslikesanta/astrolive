@@ -39,7 +39,7 @@ export default function HomePage() {
                   <CompassMark />
                   <span style={{ color: "#d8d5ec", fontWeight: 700 }}>Today&apos;s Compass</span>
                 </div>
-                <div className="result-label">Wednesday · Your day</div>
+                <div className="result-label">Today · Your day</div>
                 <div style={{ fontSize: "clamp(32px,4vw,52px)", lineHeight: 1.02, fontWeight: 820, letterSpacing: "-.04em", marginTop: 14 }}>
                   A better day for clarity than speed.
                 </div>
