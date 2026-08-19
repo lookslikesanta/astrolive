@@ -1,24 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import { categoryLabels, sharedGuidance } from "@/lib/demo-data";
 import { decodeSharedMoment } from "@/lib/share";
-import type { SharedMomentPayload } from "@/types";
 
 export default function SharedMomentPage() {
   const params = useParams<{ id: string }>();
-  const [payload, setPayload] = useState<SharedMomentPayload | null>(null);
-  const [invalid, setInvalid] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    const decoded = decodeSharedMoment(params.id);
-    if (decoded) setPayload(decoded);
-    else setInvalid(true);
-  }, [params.id]);
+  const payload = useMemo(() => decodeSharedMoment(params.id), [params.id]);
 
   const expertHref = useMemo(() => {
     if (!payload) return "/experts";
@@ -36,7 +28,7 @@ export default function SharedMomentPage() {
     }
   }
 
-  if (invalid) {
+  if (!payload) {
     return (
       <main className="shell">
         <AppHeader />
@@ -52,10 +44,6 @@ export default function SharedMomentPage() {
         </section>
       </main>
     );
-  }
-
-  if (!payload) {
-    return <main className="shell"><AppHeader /><section className="page"><div className="narrow"><div className="card">Opening shared moment…</div></div></section></main>;
   }
 
   return (
