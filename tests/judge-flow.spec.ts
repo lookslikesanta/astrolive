@@ -6,6 +6,7 @@ async function expectNoHorizontalOverflow(page: Page) {
 }
 
 async function capture(page: Page, testInfo: TestInfo, name: string) {
+  await page.evaluate(() => window.scrollTo(0, 0));
   await expectNoHorizontalOverflow(page);
   await page.screenshot({
     path: testInfo.outputPath(`${name}.png`),
@@ -41,16 +42,16 @@ test("canonical judge journey works end to end", async ({ page }, testInfo) => {
   await expect(page).toHaveURL(/\/plan$/);
   await page.getByRole("button", { name: /Difficult conversation/ }).click();
   await page.getByLabel("Moment title").fill("Talk with Mira about moving cities");
-  await page.getByRole("button", { name: "Important" }).click();
+  await page.getByRole("button", { name: "Important", exact: true }).click();
   await page.getByRole("button", { name: "Generate my Compass", exact: false }).click();
 
   await expect(page.getByText("Choose clarity over winning the conversation.")).toBeVisible();
   await expect(page.getByText("6:10 PM – 7:30 PM")).toBeVisible();
   await capture(page, testInfo, "03-plan-result");
 
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: "Save", exact: true }).click();
   await expect(page.getByRole("button", { name: /Saved/ })).toBeVisible();
-  await page.getByRole("button", { name: "Add someone" }).click();
+  await page.getByRole("button", { name: "Add someone", exact: true }).click();
   await page.getByLabel("Their first name").fill("Mira");
   await page.getByRole("button", { name: "Create shared moment", exact: false }).click();
 
@@ -59,10 +60,10 @@ test("canonical judge journey works end to end", async ({ page }, testInfo) => {
   await expect(page.getByText("6:20 PM – 7:20 PM")).toBeVisible();
   await capture(page, testInfo, "04-shared-moment");
 
-  await page.getByRole("link", { name: "Ask an expert" }).click();
+  await page.getByRole("link", { name: "Ask an expert", exact: true }).click();
   await expect(page).toHaveURL(/\/experts\?/);
   await expect(page.getByRole("heading", { name: "When the moment matters, hand it to a human." })).toBeVisible();
-  await expect(page.getByText("Talk with Mira about moving cities")).toBeVisible();
+  await expect(page.getByText("Talk with Mira about moving cities", { exact: true })).toBeVisible();
   await expect(page.getByText("Sample profile").first()).toBeVisible();
   await capture(page, testInfo, "05-expert-handoff");
 
