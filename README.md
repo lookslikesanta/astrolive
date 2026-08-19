@@ -6,6 +6,12 @@ The core loop is:
 
 `Check today → Plan a moment → Share when relevant → Escalate to an expert when needed`
 
+## Live prototype
+
+Public demo: https://astrolive-compass-478smk.v2.appdeploy.ai/
+
+The canonical source repository remains this Next.js application. For the public hackathon demo, the validated frontend experience was ported to AppDeploy as a frontend-only React/Vite static build using hash navigation so every judge-facing route and Shared Moment link can run without a backend or server-side routing dependency. See [`docs/deployment-evidence.md`](./docs/deployment-evidence.md) for deployment and QA evidence.
+
 ## Prototype journey
 
 1. **Landing** — explains the product opportunity.
@@ -26,6 +32,8 @@ The concept is designed around four AstroHack opportunities:
 
 ## Technical approach
 
+Canonical repository:
+
 - Next.js App Router
 - TypeScript
 - Tailwind CSS + project-specific design tokens/styles
@@ -33,6 +41,13 @@ The concept is designed around four AstroHack opportunities:
 - deterministic fixture-based astrology guidance
 - safe Base64URL shared-moment payload containing moment context only
 - no authentication, database, paid API, or LLM dependency in the judge path
+
+Public AppDeploy build:
+
+- frontend-only React/Vite static deployment
+- same deterministic guidance and localStorage model
+- hash navigation for static routing and shareable Shared Moment URLs
+- no AppDeploy backend, secrets, database, auth, or AI SDK dependency
 
 ## Run locally
 
@@ -62,4 +77,4 @@ A real implementation would use a trusted astrology calculation service to gener
 
 ## Documentation
 
-The complete product brief, research, UI/UX specification, architecture, implementation plan, QA plan, submission plan, sources, and chronological development evidence live in [`/docs`](./docs/README.md).
+The complete product brief, research, UI/UX specification, architecture, implementation plan, QA plan, submission plan, sources, deployment evidence, and chronological development evidence live in [`/docs`](./docs/README.md).
