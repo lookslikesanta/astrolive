@@ -1,1 +1,0 @@
-Temporary note: development proceeds on agent/mvp-vertical-slice after documentation baseline.
