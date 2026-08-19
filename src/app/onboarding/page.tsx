@@ -1,10 +1,10 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import { demoProfile } from "@/lib/demo-data";
-import { readProfile, writeProfile } from "@/lib/storage";
+import { writeProfile } from "@/lib/storage";
 import type { UserProfile } from "@/types";
 
 const emptyProfile: UserProfile = {
@@ -18,11 +18,6 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile>(emptyProfile);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    const saved = readProfile();
-    if (saved) setProfile(saved);
-  }, []);
 
   function continueWith(nextProfile: UserProfile) {
     if (!nextProfile.firstName.trim() || !nextProfile.birthDate) {
