@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { AppHeader } from "@/components/app-header";
 import { categoryLabels, demoExperts } from "@/lib/demo-data";
 import type { MomentCategory } from "@/types";
@@ -15,11 +12,16 @@ const categories = new Set<MomentCategory>([
   "study",
 ]);
 
-export default function ExpertsPage() {
-  const searchParams = useSearchParams();
-  const rawCategory = searchParams.get("category") as MomentCategory | null;
-  const category = rawCategory && categories.has(rawCategory) ? rawCategory : null;
-  const title = (searchParams.get("title") || "Your current moment").slice(0, 120);
+type ExpertsPageProps = {
+  searchParams: Promise<{ category?: string | string[]; title?: string | string[] }>;
+};
+
+export default async function ExpertsPage({ searchParams }: ExpertsPageProps) {
+  const params = await searchParams;
+  const rawCategory = typeof params.category === "string" ? params.category : null;
+  const category = rawCategory && categories.has(rawCategory as MomentCategory) ? (rawCategory as MomentCategory) : null;
+  const rawTitle = typeof params.title === "string" ? params.title : "Your current moment";
+  const title = rawTitle.slice(0, 120);
 
   return (
     <main className="shell">
@@ -67,7 +69,7 @@ export default function ExpertsPage() {
                     <span>{expert.languages.join(" · ")}</span>
                   </div>
                 </div>
-                <button className="btn btn-primary btn-block" type="button" onClick={() => window.alert("Prototype only: this would open AstroLive chat/call with the moment context attached.")}>Preview consultation handoff</button>
+                <a className="btn btn-primary btn-block" href="https://astrolive.app/" target="_blank" rel="noreferrer">Open AstroLive experts ↗</a>
               </article>
             ))}
           </div>
@@ -88,7 +90,7 @@ export default function ExpertsPage() {
             </div>
           </section>
 
-          <p className="disclosure">All expert names and experience shown here are sample/demo profiles for the hackathon prototype, not claims about real AstroLive astrologers.</p>
+          <p className="disclosure">All expert names and experience shown here are sample/demo profiles for the hackathon prototype, not claims about real AstroLive astrologers. The external CTA opens AstroLive itself; no consultation is simulated as completed.</p>
         </div>
       </section>
     </main>
