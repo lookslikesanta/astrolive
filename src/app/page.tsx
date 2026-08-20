@@ -7,7 +7,7 @@ export default function HomePage() {
       <AppHeader />
 
       {/* Hero Section */}
-      <section className="section" style={{ paddingTop: 44, paddingBottom: 56 }}>
+      <section className="section" style={{ paddingTop: 44, paddingBottom: 40 }}>
         <div className="container">
           <div
             style={{
@@ -44,7 +44,7 @@ export default function HomePage() {
 
               <div className="meta" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
                 <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)", display: "inline-block" }} />
-                <span>No signup required · Instant sample profile ready to explore</span>
+                <span>1-Click demo profile ready to explore · No account required</span>
               </div>
             </div>
 
@@ -59,8 +59,8 @@ export default function HomePage() {
                   <CompassMark size={22} />
                   <span style={{ fontWeight: 600, fontSize: 13.5, color: "var(--foreground-on-midnight)" }}>Today&apos;s Compass</span>
                 </div>
-                <span style={{ fontSize: 12, color: "var(--accent)", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                  Daily Focus
+                <span style={{ fontSize: 11.5, color: "var(--accent)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                  Live Preview
                 </span>
               </div>
 
@@ -100,6 +100,47 @@ export default function HomePage() {
                   <span style={{ fontSize: 13, color: "var(--foreground-on-midnight-muted)" }}>A steadier window for conversation and reflection.</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* From Prediction to Action Contrast Strip */}
+      <section className="section" style={{ paddingTop: 0, paddingBottom: 40 }}>
+        <div className="container">
+          <div
+            className="surface-sheet"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+              gap: 28,
+              background: "var(--surface-raised)",
+              borderColor: "var(--border-subtle)",
+              padding: "24px 28px",
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--foreground-subtle)" }}>
+                Conventional Astrology
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: "var(--foreground-muted)" }}>
+                Complex charts & passive horoscopes
+              </div>
+              <p className="body" style={{ fontSize: 13.5, color: "var(--foreground-subtle)" }}>
+                Overwhelming walls of predictions that tell you what might happen, without clear guidance on what to actually do.
+              </p>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 6, borderLeft: "2px solid var(--accent)", paddingLeft: 18 }}>
+              <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--accent-ink)" }}>
+                AstroLive Compass
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "var(--foreground)" }}>
+                Clear timing windows & preparation prompts
+              </div>
+              <p className="body" style={{ fontSize: 13.5 }}>
+                Three actionable daily windows, concrete prompts for difficult conversations and key decisions, shared timing, and astrologer escalation.
+              </p>
             </div>
           </div>
         </div>
