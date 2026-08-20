@@ -26,6 +26,17 @@ test("canonical judge journey works end to end", async ({ page }, testInfo) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/AstroLive Compass/);
   await expect(page.getByRole("heading", { name: "Plan with the day, not against it." })).toBeVisible();
+
+  // Explicitly verify mobile touch targets on header nav
+  if (testInfo.project.name.startsWith("mobile")) {
+    const todayBox = await page.getByRole("link", { name: "Today", exact: true }).boundingBox();
+    expect(todayBox?.height).toBeGreaterThanOrEqual(40);
+    const planBox = await page.getByRole("link", { name: "Plan", exact: true }).boundingBox();
+    expect(planBox?.height).toBeGreaterThanOrEqual(40);
+    const demoBox = await page.getByRole("link", { name: "Demo", exact: true }).first().boundingBox();
+    expect(demoBox?.height).toBeGreaterThanOrEqual(40);
+  }
+
   await capture(page, testInfo, "01-landing");
 
   await page.getByRole("link", { name: "Try the demo", exact: false }).first().click();

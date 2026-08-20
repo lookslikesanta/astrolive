@@ -163,7 +163,7 @@ export default function HomePage() {
               </div>
               <h3 className="h3">Astrologer Handoff</h3>
               <p className="body" style={{ fontSize: 13.5 }}>
-                Carry your moment context directly into an AstroLive astrologer consultation when decisions deserve more depth.
+                Continue from your planned moment to an AstroLive astrologer when the decision deserves more depth.
               </p>
             </div>
           </div>

@@ -57,7 +57,7 @@ export default async function ExpertsPage({ searchParams }: ExpertsPageProps) {
           >
             <div>
               <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--primary)" }}>
-                Carrying Context For
+                Planned Moment Context
               </div>
               <h2
                 className="font-display"
@@ -87,7 +87,7 @@ export default async function ExpertsPage({ searchParams }: ExpertsPageProps) {
                   border: "1px solid rgba(24, 21, 51, 0.1)",
                 }}
               >
-                Context preserved
+                Local reference
               </span>
             </div>
           </div>
@@ -194,7 +194,7 @@ export default async function ExpertsPage({ searchParams }: ExpertsPageProps) {
                 Want to refine your timing first?
               </div>
               <div className="meta" style={{ marginTop: 2 }}>
-                Your moment context is saved. You can return to the planner or check today&apos;s briefing.
+                Your planned moment is saved in this browser. You can return to the planner or check today&apos;s briefing.
               </div>
             </div>
 

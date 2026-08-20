@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function CompassMark({ size = 30 }: { size?: number }) {
+export function CompassMark({ size = 26 }: { size?: number }) {
   return (
     <span
       className="compass-mark"
@@ -23,13 +23,20 @@ export function CompassMark({ size = 30 }: { size?: number }) {
 export function AppHeader() {
   return (
     <header className="site-header">
-      <div className="container header-row">
-        <Link className="brand" href="/" aria-label="AstroLive Compass Home">
-          <CompassMark size={26} />
-          <span>
-            AstroLive <span className="brand-accent">Compass</span>
-          </span>
-        </Link>
+      <div className="container header-container">
+        <div className="header-primary-row">
+          <Link className="brand" href="/" aria-label="AstroLive Compass Home">
+            <CompassMark size={26} />
+            <span>
+              AstroLive <span className="brand-accent">Compass</span>
+            </span>
+          </Link>
+          <div className="header-actions">
+            <Link className="btn btn-primary btn-sm header-demo-btn" href="/onboarding">
+              Demo
+            </Link>
+          </div>
+        </div>
         <nav className="nav-links" aria-label="Primary navigation">
           <Link className="nav-link" href="/today">
             Today
@@ -40,7 +47,7 @@ export function AppHeader() {
           <Link className="nav-link" href="/experts">
             Experts
           </Link>
-          <Link className="btn btn-primary btn-sm" href="/onboarding" style={{ marginLeft: 4 }}>
+          <Link className="btn btn-primary btn-sm desktop-demo-btn" href="/onboarding" style={{ marginLeft: 4 }}>
             Demo
           </Link>
         </nav>
