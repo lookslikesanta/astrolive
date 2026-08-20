@@ -56,7 +56,7 @@ test("canonical judge journey works end to end", async ({ page }, testInfo) => {
   await page.getByRole("button", { name: "Create shared moment", exact: false }).click();
 
   await expect(page).toHaveURL(/\/together\//);
-  await expect(page.getByRole("heading", { name: "Aarav + Mira" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Aarav.*Mira/ })).toBeVisible();
   await expect(page.getByText("6:20 PM – 7:20 PM")).toBeVisible();
   await capture(page, testInfo, "04-shared-moment");
 

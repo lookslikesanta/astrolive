@@ -349,6 +349,43 @@ Validation evidence:
 - Playwright E2E suite: 2/2 tests passed across `desktop-chromium` (1440×900) and `mobile-chromium` (Pixel 7).
 - Zero console errors and zero unhandled page errors.
 
-Report-ready takeaway:
-The UI retains its bold, confident celestial-midnight aesthetic and clear visual hierarchy while eliminating all leaked pitch-deck text. The prototype presents as an authentic, polished AstroLive consumer feature ready for submission and judging.
+## Known limitations
+
+- Deterministic demo guidance: Astrology calculations use sample signals rather than a real ephemeris engine.
+- Local profile storage: User profile details reside only in `localStorage` in the user's browser.
+- Safe share payload: Shared moment links encode only high-level moment context (title, category, date, names); private birth profile details are never transmitted in URLs.
+- Sample astrologer profiles: The experts page displays illustrative profiles; the action links out to the live AstroLive app.
+- Static client-side routing: No backend server, database, or external auth required.
+
+## Slice 9 — Calm Editorial Redesign & Visual De-SaaSification (20 August 2026)
+
+Status: completed and verified
+
+Objectives:
+- Remove generic AI/SaaS visual template patterns (excessive card-stacking, rounded rectangle nesting, pill clouds, repetitive eyebrow-heading-paragraph-CTA rhythms).
+- Establish an intentional editorial typographic hierarchy using `Newsreader` (editorial display serif) and `Plus Jakarta Sans` (crisp UI sans).
+- Transform the Landing page from a 4-box SaaS grid into a fluid connected journey narrative.
+- Redesign the Today screen from a dashboard into an editorial daily briefing with a unified continuous Time Rail (Morning, Afternoon, Evening).
+- Restructure Plan a Moment into a progressive disclosure flow with an unboxed, dynamic result hierarchy.
+- Convert Shared Moments into a warm, human two-person planning canvas.
+- Remove unsupported claims ("verified astrologer") and all remaining pitch-deck / hackathon terms across the UI.
+
+Key changes:
+- `src/app/layout.tsx`: Configured `Newsreader` and `Plus Jakarta Sans` with `next/font/google` variables `--font-display` and `--font-sans`.
+- `src/app/globals.css`: Rebuilt design system with warm linen palette (`#f7f4ee`), midnight indigo (`#16142e`), saffron gold (`#c4821a`), mineral sage (`#1a5b5d`), continuous `.time-rail`, tactile `.tile-interactive`, and reduced box-nesting.
+- `src/components/app-header.tsx`: Refined site header with custom geometric CompassMark and responsive navigation links.
+- `src/app/page.tsx`: Rewrote Landing page with clear editorial headline, live preview panel, 4-step continuous rhythm, and direct entry actions.
+- `src/app/onboarding/page.tsx`: Streamlined onboarding with 1-click sample profile quick-start and `max=today` birth date constraint.
+- `src/app/today/page.tsx`: Editorial daily briefing centered on "A better day for clarity than speed.", bulleted guidance lists, continuous day progression, and upcoming focus integration.
+- `src/app/plan/page.tsx`: Progressive disclosure for category choice and context inputs, category switching without state erasure, unboxed result hierarchy, and reduced-motion-safe auto-scroll.
+- `src/app/together/[id]/page.tsx`: Warm collaborative canvas for "Aarav & Mira" with shared timing window and dual-column guidance.
+- `src/app/experts/page.tsx`: Context-first handoff ("Carrying context for: Talk with Mira about moving cities"), transparent sample profile badges, and direct "Consult on AstroLive ↗" links.
+
+Validation evidence:
+- Next.js Turbopack optimized production build: success in 2.5s.
+- TypeScript check: 0 errors.
+- ESLint: 0 errors.
+- Playwright E2E test suite: 2/2 tests passed across `desktop-chromium` (1440×900) and `mobile-chromium` (Pixel 7).
+- In-app browser audit: verified across desktop (1440×900) and mobile (390×844) with full-page visual evidence.
+
 

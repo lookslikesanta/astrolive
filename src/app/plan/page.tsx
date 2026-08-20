@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AppHeader } from "@/components/app-header";
+import { AppHeader, CompassMark } from "@/components/app-header";
 import {
   categoryDescriptions,
   categoryLabels,
@@ -34,7 +34,10 @@ function localDate() {
 
 export default function PlanPage() {
   const router = useRouter();
-  const [category, setCategory] = useState<MomentCategory | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const collaboratorInputId = useId();
+
+  const [category, setCategory] = useState<MomentCategory>("conversation");
   const [date, setDate] = useState(localDate);
   const [preferredPeriod, setPreferredPeriod] = useState<PreferredPeriod>("flexible");
   const [importance, setImportance] = useState<Importance>("normal");
@@ -61,11 +64,11 @@ export default function PlanPage() {
     setError("");
 
     if (!category) {
-      setError("Choose what kind of moment you are planning.");
+      setError("Please select what kind of moment you are planning.");
       return;
     }
     if (!date) {
-      setError("Choose a date for the moment.");
+      setError("Please select a date for the moment.");
       return;
     }
 
@@ -76,21 +79,26 @@ export default function PlanPage() {
       preferredPeriod,
       importance,
     };
-    const newResult = {
+
+    const newResult: Moment = {
       ...input,
       id: `moment-${Date.now()}`,
       result: generateMomentResult(input),
     };
+
     setResult(newResult);
 
-    setTimeout(() => {
-      if (typeof window !== "undefined" && window.innerWidth < 900) {
-        document.querySelector(".result-hero")?.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 50);
+    // Smoothly bring the result into view on mobile
+    if (typeof window !== "undefined" && window.innerWidth < 900) {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      resultRef.current?.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    }
   }
 
-  function save() {
+  function handleSave() {
     if (!result) return;
     saveMoment(result);
     setSaved(true);
@@ -100,12 +108,13 @@ export default function PlanPage() {
     if (!result) return;
     const cleanName = collaborator.trim().slice(0, 60);
     if (!cleanName) {
-      setError("Add the other person's name to create a shared moment.");
+      setError("Please enter the other person's name to create a shared moment.");
       return;
     }
+    const creatorName = readProfile()?.firstName || "Aarav";
     const encoded = encodeSharedMoment({
       version: 1,
-      creator: readProfile()?.firstName || "Aarav",
+      creator: creatorName,
       collaborator: cleanName,
       category: result.category,
       title: result.title || categoryLabels[result.category],
@@ -113,151 +122,362 @@ export default function PlanPage() {
       preferredPeriod: result.preferredPeriod,
       importance: result.importance,
     });
-    if (typeof window !== "undefined") {
-      window.location.href = `/together/${encoded}`;
-    } else {
-      router.push(`/together/${encoded}`);
-    }
+    router.push(`/together/${encoded}`);
   }
 
   return (
     <main className="shell">
       <AppHeader />
+
       <section className="page">
         <div className="container">
-          <div className="page-head">
-            <div className="page-head-copy">
-              <div className="eyebrow">Plan a Moment</div>
-              <h1 className="h1">Make the astrology specific enough to act on.</h1>
-              <p className="lead" style={{ fontSize: 18 }}>
-                Choose what matters, when it is happening, and how flexible you are. Compass returns preparation guidance plus a stronger and weaker window.
-              </p>
+          {/* Header */}
+          <div style={{ marginBottom: 32, borderBottom: "1px solid var(--border-hairline)", paddingBottom: 20 }}>
+            <div className="eyebrow" style={{ marginBottom: 4 }}>
+              <CompassMark size={16} />
+              <span>Plan a Moment</span>
             </div>
+            <h1 className="h1">Make the astrology specific enough to act on.</h1>
+            <p className="lead" style={{ marginTop: 6 }}>
+              Choose what matters, when it is happening, and how flexible you are. Compass returns preparation guidance plus a stronger and caution window.
+            </p>
           </div>
 
-          <div className="today-grid">
+          {/* Grid Layout: Form on Left, Result on Right */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))",
+              gap: 32,
+              alignItems: "start",
+            }}
+          >
+            {/* Planner Form */}
             <form className="form-stack" onSubmit={generate}>
-              <section className="card">
-                <div className="card-head">
-                  <div>
-                    <div className="eyebrow">1 · The moment</div>
-                    <h2 className="h3" style={{ marginTop: 7 }}>What are you planning?</h2>
-                  </div>
+              {/* Step 1: Category Selection */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <label className="label">
+                    1 · What are you planning?
+                  </label>
+                  <span className="meta">Choose one</span>
                 </div>
-                <div className="option-grid">
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+                    gap: 10,
+                  }}
+                >
                   {categories.map((item) => (
                     <button
-                      className={`option-card ${category === item ? "selected" : ""}`}
+                      className={`tile tile-interactive ${category === item ? "selected" : ""}`}
                       type="button"
                       aria-pressed={category === item}
                       key={item}
                       onClick={() => {
                         setCategory(item);
                         setError("");
-                        setResult(null);
                       }}
                     >
-                      <div className="option-title">{categoryLabels[item]}</div>
-                      <div className="option-copy">{categoryDescriptions[item]}</div>
+                      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 3, color: "var(--foreground)" }}>
+                        {categoryLabels[item]}
+                      </div>
+                      <div style={{ fontSize: 12.5, color: "var(--foreground-muted)", lineHeight: 1.45 }}>
+                        {categoryDescriptions[item]}
+                      </div>
                     </button>
                   ))}
                 </div>
-              </section>
+              </div>
 
-              <section className="card">
-                <div className="eyebrow">2 · Context</div>
-                <div className="form-stack" style={{ marginTop: 18 }}>
+              {/* Step 2: Context & Preferences */}
+              <div className="surface-sheet">
+                <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 14 }}>
+                  2 · Context & Timing Details
+                </div>
+
+                <div className="form-stack">
                   <div className="field">
-                    <label className="label" htmlFor="title">Moment title <span className="muted">(optional)</span></label>
-                    <input className="input" id="title" maxLength={120} placeholder="e.g. Talk with Mira about moving cities" value={title} onChange={(event) => setTitle(event.target.value)} />
+                    <label className="label" htmlFor="title">
+                      Moment title <span className="meta">(optional)</span>
+                    </label>
+                    <input
+                      className="input"
+                      id="title"
+                      maxLength={120}
+                      placeholder="e.g. Talk with Mira about moving cities"
+                      value={title}
+                      onChange={(event) => setTitle(event.target.value)}
+                    />
                   </div>
-                  <div className="card-grid-2">
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+                      gap: 14,
+                    }}
+                  >
                     <div className="field">
-                      <label className="label" htmlFor="date">Date</label>
-                      <input className="input" id="date" type="date" min={localDate()} value={date} onChange={(event) => setDate(event.target.value)} />
+                      <label className="label" htmlFor="date">
+                        Date
+                      </label>
+                      <input
+                        className="input"
+                        id="date"
+                        type="date"
+                        min={localDate()}
+                        value={date}
+                        onChange={(event) => setDate(event.target.value)}
+                      />
                     </div>
+
                     <div className="field">
                       <label className="label">Importance</label>
-                      <div className="segment" style={{ gridTemplateColumns: "1fr 1fr" }}>
+                      <div className="segment-control">
                         {(["normal", "important"] as Importance[]).map((value) => (
-                          <button className={importance === value ? "active" : ""} type="button" key={value} onClick={() => setImportance(value)}>
-                            {value === "normal" ? "Everyday" : "Important"}
+                          <button
+                            className={`segment-btn ${importance === value ? "active" : ""}`}
+                            type="button"
+                            key={value}
+                            onClick={() => setImportance(value)}
+                          >
+                            {value === "normal" ? "Normal" : "Important"}
                           </button>
                         ))}
                       </div>
                     </div>
                   </div>
+
                   <div className="field">
                     <label className="label">Preferred part of day</label>
-                    <div className="segment">
+                    <div className="segment-control">
                       {periods.map((period) => (
-                        <button className={preferredPeriod === period.value ? "active" : ""} type="button" key={period.value} onClick={() => setPreferredPeriod(period.value)}>
+                        <button
+                          className={`segment-btn ${preferredPeriod === period.value ? "active" : ""}`}
+                          type="button"
+                          key={period.value}
+                          onClick={() => setPreferredPeriod(period.value)}
+                        >
                           {period.label}
                         </button>
                       ))}
                     </div>
                   </div>
                 </div>
-              </section>
+              </div>
 
-              {error ? <div className="error" role="alert">{error}</div> : null}
-              <button className="btn btn-primary btn-block" type="submit">Generate my Compass →</button>
+              {error ? (
+                <div className="alert-error" role="alert">
+                  {error}
+                </div>
+              ) : null}
+
+              <button className="btn btn-primary btn-block" type="submit" style={{ minHeight: 46 }}>
+                Generate my Compass →
+              </button>
             </form>
 
-            <aside className="sticky-rail">
+            {/* Recommendation Result Column */}
+            <div ref={resultRef} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               {result ? (
                 <>
-                  <article className="result-hero">
-                    <div className="result-label">Your recommendation</div>
-                    <h2 className="result-headline" style={{ fontSize: "clamp(30px,3.5vw,44px)" }}>{result.result.headline}</h2>
-                    <div className="window-pair">
-                      <div className="window-box"><span className="result-label">Stronger window</span><strong>{result.result.bestWindow}</strong></div>
-                      <div className="window-box"><span className="result-label">Use more care</span><strong>{result.result.cautionWindow}</strong></div>
+                  {/* Result Header & Timing Windows */}
+                  <div className="surface-sheet">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                      <span className="eyebrow">Your recommendation</span>
+                      <span className="meta">{result.date}</span>
                     </div>
-                  </article>
 
-                  <div className="card">
-                    <div className="eyebrow">Prepare like this</div>
-                    <ul className="list" style={{ marginTop: 16 }}>
-                      {result.result.guidance.map((item) => <li key={item}>{item}</li>)}
-                    </ul>
-                  </div>
+                    <h2
+                      className="font-display"
+                      style={{
+                        fontSize: "clamp(24px, 3vw, 34px)",
+                        fontWeight: 400,
+                        lineHeight: 1.15,
+                        margin: "0 0 18px",
+                        color: "var(--primary)",
+                      }}
+                    >
+                      {result.result.headline}
+                    </h2>
 
-                  <div className="card">
-                    <div className="eyebrow">Why this?</div>
-                    <p className="body">{result.result.why}</p>
-                    <div className="hero-actions">
-                      <button className="btn btn-secondary" type="button" onClick={save}>{saved ? "Saved ✓" : "Save"}</button>
-                      <button className="btn btn-primary" type="button" onClick={() => { setAddingSomeone(true); setError(""); }}>Add someone</button>
-                      <Link className="btn btn-ghost" href={expertHref}>Ask an expert</Link>
-                    </div>
-                  </div>
-
-                  {addingSomeone ? (
-                    <div className="card card-highlight">
-                      <div className="eyebrow">Together</div>
-                      <h3 className="h3" style={{ marginTop: 9 }}>Who is part of this moment?</h3>
-                      <p className="body">The shared link contains only safe moment context and names—never your birth details.</p>
-                      <div className="field">
-                        <label className="label" htmlFor="collaborator">Their first name</label>
-                        <input className="input" id="collaborator" maxLength={60} placeholder="Mira" value={collaborator} onChange={(event) => setCollaborator(event.target.value)} />
+                    {/* Window comparison tiles */}
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+                        gap: 10,
+                        marginBottom: 20,
+                      }}
+                    >
+                      <div
+                        style={{
+                          padding: "12px 14px",
+                          borderRadius: "var(--radius-xs)",
+                          background: "var(--supportive-soft)",
+                          border: "1px solid rgba(26, 91, 93, 0.18)",
+                        }}
+                      >
+                        <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--supportive-ink)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                          Stronger Window
+                        </div>
+                        <div style={{ fontSize: 15.5, fontWeight: 700, marginTop: 3, color: "var(--supportive-ink)" }}>
+                          {result.result.bestWindow}
+                        </div>
                       </div>
-                      <button className="btn btn-primary btn-block" type="button" style={{ marginTop: 14 }} onClick={createSharedMoment}>Create shared moment →</button>
+
+                      <div
+                        style={{
+                          padding: "12px 14px",
+                          borderRadius: "var(--radius-xs)",
+                          background: "var(--caution-soft)",
+                          border: "1px solid rgba(138, 72, 22, 0.18)",
+                        }}
+                      >
+                        <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--caution-ink)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                          Use More Caution
+                        </div>
+                        <div style={{ fontSize: 15.5, fontWeight: 700, marginTop: 3, color: "var(--caution-ink)" }}>
+                          {result.result.cautionWindow}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Preparation Points */}
+                    <div style={{ borderTop: "1px solid var(--border-hairline)", paddingTop: 16 }}>
+                      <div style={{ fontWeight: 700, fontSize: 13.5, marginBottom: 10 }}>
+                        Prepare like this
+                      </div>
+                      <ul className="guidance-list">
+                        {result.result.guidance.map((item, index) => (
+                          <li className="guidance-item" key={index}>
+                            <span className="guidance-item-bullet accent" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Why this */}
+                    <p className="meta" style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid var(--border-hairline)" }}>
+                      {result.result.why}
+                    </p>
+
+                    {/* Action Bar */}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 8,
+                        marginTop: 20,
+                        paddingTop: 16,
+                        borderTop: "1px solid var(--border-hairline)",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <button
+                        className={`btn ${saved ? "btn-secondary" : "btn-primary"} btn-sm`}
+                        type="button"
+                        onClick={handleSave}
+                      >
+                        {saved ? "Saved ✓" : "Save"}
+                      </button>
+
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        type="button"
+                        onClick={() => {
+                          setAddingSomeone(true);
+                          setError("");
+                        }}
+                      >
+                        Add someone
+                      </button>
+
+                      <Link className="btn btn-ghost btn-sm" href={expertHref}>
+                        Ask an expert
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Inline Collaborator Expansion */}
+                  {addingSomeone ? (
+                    <div className="tile" style={{ background: "var(--accent-soft)", borderColor: "rgba(196, 130, 26, 0.28)" }}>
+                      <div style={{ fontWeight: 700, fontSize: 14.5, color: "var(--accent-ink)", marginBottom: 2 }}>
+                        Who is part of this moment?
+                      </div>
+                      <p className="body" style={{ fontSize: 13, color: "var(--foreground-muted)", marginBottom: 12 }}>
+                        The shared link contains only safe moment context and names—never your birth details.
+                      </p>
+
+                      <div className="field" style={{ marginBottom: 12 }}>
+                        <label className="label" htmlFor={collaboratorInputId}>
+                          Their first name
+                        </label>
+                        <input
+                          className="input"
+                          id={collaboratorInputId}
+                          maxLength={60}
+                          placeholder="e.g. Mira"
+                          value={collaborator}
+                          onChange={(event) => setCollaborator(event.target.value)}
+                        />
+                      </div>
+
+                      <button
+                        className="btn btn-accent btn-block btn-sm"
+                        type="button"
+                        onClick={createSharedMoment}
+                      >
+                        Create shared moment →
+                      </button>
                     </div>
                   ) : null}
                 </>
               ) : (
-                <div className="card card-highlight">
-                  <div className="eyebrow">What you&apos;ll get</div>
-                  <h2 className="h3" style={{ marginTop: 9 }}>A planning answer, not a prediction.</h2>
-                  <p className="body">Compass will show a stronger window, a caution window, and three concrete preparation prompts.</p>
-                  <div className="notice">For the fastest judge path, choose <strong>Difficult conversation</strong>, mark it important, and keep timing flexible.</div>
+                /* Empty State Guidance */
+                <div className="tile" style={{ background: "var(--surface-raised)", padding: 28 }}>
+                  <div className="eyebrow" style={{ marginBottom: 6 }}>
+                    What you&apos;ll get
+                  </div>
+                  <h2 className="h3" style={{ margin: "4px 0 8px" }}>
+                    A planning answer, not a prediction.
+                  </h2>
+                  <p className="body" style={{ fontSize: 13.5 }}>
+                    Compass will show a stronger window, a caution window, and three concrete preparation prompts.
+                  </p>
+                  <div
+                    className="meta"
+                    style={{
+                      marginTop: 14,
+                      padding: "8px 12px",
+                      background: "var(--surface-subtle)",
+                      borderRadius: "var(--radius-xs)",
+                    }}
+                  >
+                    Quick demo recommendation: Choose <strong>Difficult conversation</strong>, mark it <strong>Important</strong>, and keep timing flexible.
+                  </div>
                 </div>
               )}
-            </aside>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="container footer-row">
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <CompassMark size={16} />
+            <span style={{ fontSize: 13, fontWeight: 600 }}>AstroLive Compass</span>
+          </div>
+          <div className="meta">
+            Practical planning · Reflective guidance
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
