@@ -76,11 +76,18 @@ export default function PlanPage() {
       preferredPeriod,
       importance,
     };
-    setResult({
+    const newResult = {
       ...input,
       id: `moment-${Date.now()}`,
       result: generateMomentResult(input),
-    });
+    };
+    setResult(newResult);
+
+    setTimeout(() => {
+      if (typeof window !== "undefined" && window.innerWidth < 900) {
+        document.querySelector(".result-hero")?.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 50);
   }
 
   function save() {
@@ -106,7 +113,11 @@ export default function PlanPage() {
       preferredPeriod: result.preferredPeriod,
       importance: result.importance,
     });
-    router.push(`/together/${encoded}`);
+    if (typeof window !== "undefined") {
+      window.location.href = `/together/${encoded}`;
+    } else {
+      router.push(`/together/${encoded}`);
+    }
   }
 
   return (

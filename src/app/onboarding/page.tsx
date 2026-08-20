@@ -29,7 +29,11 @@ export default function OnboardingPage() {
       firstName: nextProfile.firstName.trim().slice(0, 60),
       birthPlace: nextProfile.birthPlace?.trim().slice(0, 120),
     });
-    router.push("/today");
+    if (typeof window !== "undefined") {
+      window.location.href = "/today";
+    } else {
+      router.push("/today");
+    }
   }
 
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -47,7 +51,7 @@ export default function OnboardingPage() {
               <div className="eyebrow">Set your Compass</div>
               <h1 className="h1">A small amount of context, no account required.</h1>
               <p className="lead" style={{ fontSize: 18 }}>
-                In a production version, birth details would feed AstroLive&apos;s trusted astrology calculation layer. This prototype stores your demo profile only in this browser.
+                Add a few details to calibrate your daily timing windows, or continue with the sample demo profile.
               </p>
             </div>
           </div>
@@ -74,6 +78,7 @@ export default function OnboardingPage() {
                     className="input"
                     id="birthDate"
                     type="date"
+                    max={new Date().toISOString().slice(0, 10)}
                     value={profile.birthDate}
                     onChange={(event) => setProfile((current) => ({ ...current, birthDate: event.target.value }))}
                   />
@@ -100,7 +105,7 @@ export default function OnboardingPage() {
                   value={profile.birthPlace ?? ""}
                   onChange={(event) => setProfile((current) => ({ ...current, birthPlace: event.target.value }))}
                 />
-                <div className="help">Used only to demonstrate what a future chart calculation would require. It is not sent to a server in this prototype.</div>
+                <div className="help">Used locally to calibrate your timing windows. Not sent to an external server.</div>
               </div>
 
               {error ? <div className="error" role="alert">{error}</div> : null}

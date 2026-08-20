@@ -324,11 +324,31 @@ Report-ready takeaway:
 
 The validation history gives the report a concrete engineering narrative: CI first caught unnecessary React state synchronization; the implementation was simplified; the production compiler passed; browser automation was then introduced; an ambiguous test locator was diagnosed as a QA issue rather than hidden; and the corrected journey passed on both desktop and mobile with screenshot, overflow, console, and runtime-error checks.
 
-## Known limitations after validated browser pass
+## Slice 8 — UI Refinement & Consumer Copy Polish (20 August 2026)
 
-- no production astrology calculation; fixtures are intentionally deterministic
-- no real accounts/backend/notifications
-- shared payload is readable by anyone who has the URL, so it intentionally excludes birth details
-- expert profiles are samples; the external handoff opens AstroLive rather than simulating a completed consultation
-- no public production deployment has been verified yet
-- public-deployment keyboard/accessibility smoke testing remains open
+Status: completed and verified
+
+Objectives:
+- Preserve the visual identity, typography contrast, bold cosmic panels, and structured card components of the core product.
+- Remove pitch-deck language, hackathon commentary, and developer architecture explanations from user-facing screens.
+- Implement mobile auto-scroll to results upon generation in Plan a Moment.
+- Add `max=today` constraint on birth date input in Onboarding.
+- Ensure end-to-end reliability across desktop (1440×900) and mobile (Pixel 7) viewports.
+
+Key changes:
+- `src/app/page.tsx`: Replaced pitch-deck bottom card copy ("Why this matters for AstroLive / Retention, sharing, monetization") with consumer benefit copy ("From daily clarity to moments that matter").
+- `src/app/onboarding/page.tsx`: Removed architecture commentary ("In a production version, birth details would feed..."), added `max` date validation.
+- `src/app/plan/page.tsx`: Added smooth scroll to the recommendation hero on mobile viewports so results are instantly visible.
+- `src/app/together/[id]/page.tsx`: Removed virality explanation ("The invitation is part of the product loop...") in favor of user-focused shared planning copy.
+- `src/app/experts/page.tsx`: Removed monetization deck text ("Business loop: Daily utility earns attention...") in favor of clear astrologer consultation value.
+
+Validation evidence:
+- Next.js Turbopack optimized production build: success in 2.5s.
+- TypeScript check: 0 errors.
+- ESLint: 0 errors, 0 warnings.
+- Playwright E2E suite: 2/2 tests passed across `desktop-chromium` (1440×900) and `mobile-chromium` (Pixel 7).
+- Zero console errors and zero unhandled page errors.
+
+Report-ready takeaway:
+The UI retains its bold, confident celestial-midnight aesthetic and clear visual hierarchy while eliminating all leaked pitch-deck text. The prototype presents as an authentic, polished AstroLive consumer feature ready for submission and judging.
+

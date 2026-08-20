@@ -88,12 +88,12 @@ export default function SharedMomentPage() {
           <section className="card" style={{ marginTop: 18 }}>
             <div className="card-head">
               <div>
-                <div className="eyebrow">Why sharing matters</div>
-                <h2 className="h3" style={{ marginTop: 9 }}>The invitation is part of the product loop.</h2>
+                <div className="eyebrow">Shared Planning</div>
+                <h2 className="h3" style={{ marginTop: 9 }}>Plan together with the people who matter.</h2>
               </div>
             </div>
             <p className="body">
-              A useful shared result gives the invited person a reason to open AstroLive, understand the context, and create their own Compass. The production version could calculate both people&apos;s trusted astrology signals before generating this combined guidance.
+              This shared moment brings both perspectives together into one timing window. You can share this link with {payload.collaborator}, copy the invitation, or set up your own Compass.
             </p>
             <div className="hero-actions">
               <button className="btn btn-secondary" type="button" onClick={copyLink}>{copied ? "Link copied ✓" : "Copy shared link"}</button>

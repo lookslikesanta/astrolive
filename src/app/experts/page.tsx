@@ -77,11 +77,11 @@ export default async function ExpertsPage({ searchParams }: ExpertsPageProps) {
           <section className="card card-highlight" style={{ marginTop: 20 }}>
             <div className="card-grid-2" style={{ alignItems: "center" }}>
               <div>
-                <div className="eyebrow">Business loop</div>
-                <h2 className="h3" style={{ marginTop: 8 }}>Daily utility earns attention; high-intent moments create monetization opportunity.</h2>
+                <div className="eyebrow">Deeper Astrological Guidance</div>
+                <h2 className="h3" style={{ marginTop: 8 }}>When the moment matters, connect with a verified astrologer.</h2>
               </div>
               <div>
-                <p className="body">The prototype deliberately does not fake payment, chat, or video success. It demonstrates where the handoff belongs and what context should travel with it.</p>
+                <p className="body">Your moment context can be shared directly with your astrologer so you don&apos;t have to start your story over.</p>
                 <div className="hero-actions">
                   <Link className="btn btn-primary" href="/plan">Plan another moment</Link>
                   <Link className="btn btn-secondary" href="/today">Back to Today</Link>

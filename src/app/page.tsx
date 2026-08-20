@@ -92,14 +92,14 @@ export default function HomePage() {
           <div className="card card-strong" style={{ padding: "clamp(28px,5vw,52px)", borderRadius: 28 }}>
             <div className="card-grid-2" style={{ alignItems: "end" }}>
               <div>
-                <div className="result-label">Why this matters for AstroLive</div>
+                <div className="result-label">From daily clarity to moments that matter</div>
                 <h2 className="h2" style={{ marginTop: 14, color: "white" }}>
-                  Retention, sharing, and monetization reinforce each other.
+                  Plan with the day, share with others, and consult with experts.
                 </h2>
               </div>
               <div>
                 <p style={{ color: "#d8d5ec", lineHeight: 1.65, marginTop: 0 }}>
-                  Today creates a reason to return. Shared Moments turn useful planning into an invitation loop. Complex, high-intent moments naturally lead into human astrologer consultation.
+                  Today gives you a daily orientation. Shared Moments make timing collaborative. When a decision needs deeper guidance, seamlessly connect with verified astrologers.
                 </p>
                 <Link className="btn btn-dark" href="/onboarding">Start with the demo profile →</Link>
               </div>
