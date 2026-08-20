@@ -201,7 +201,7 @@ export default function SharedMomentPage({ params }: { params: Promise<{ id: str
 
           {copied ? (
             <div className="alert-success" role="status" style={{ textAlign: "center", marginBottom: 16 }}>
-              Link copied. This URL contains only safe moment details—never private birth information.
+              Link copied. This URL contains only moment details and names—never birth details.
             </div>
           ) : null}
         </div>
@@ -215,7 +215,7 @@ export default function SharedMomentPage({ params }: { params: Promise<{ id: str
             <span style={{ fontSize: 13, fontWeight: 600 }}>AstroLive Compass</span>
           </div>
           <div className="meta">
-            Shared moment planning · Safe URL encoding
+            Shared moment planning · Collaborative guidance
           </div>
         </div>
       </footer>

@@ -114,7 +114,7 @@ export default function TodayPage() {
               <div className="surface-sheet">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                   <span className="eyebrow">Today&apos;s Orientation</span>
-                  <span className="meta">Calibrated for {profile.firstName}</span>
+                  <span className="meta">For {profile.firstName}</span>
                 </div>
 
                 <h2
@@ -317,7 +317,7 @@ export default function TodayPage() {
             <span style={{ fontSize: 13, fontWeight: 600 }}>AstroLive Compass</span>
           </div>
           <div className="meta">
-            Reflective daily guidance · Calibrated locally
+            Reflective daily guidance · Profile stored locally
           </div>
         </div>
       </footer>

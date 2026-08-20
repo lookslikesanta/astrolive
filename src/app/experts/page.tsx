@@ -37,7 +37,7 @@ export default async function ExpertsPage({ searchParams }: ExpertsPageProps) {
             </div>
             <h1 className="h1">When the moment matters, hand it to a human.</h1>
             <p className="lead" style={{ marginTop: 6 }}>
-              Compass handles self-serve timing and preparation. For high-stakes decisions, your context can carry forward directly into an AstroLive astrologer consultation.
+              Compass provides reflective timing and preparation. When a decision needs deeper chart interpretation, you can continue with an astrologer on AstroLive.
             </p>
           </div>
 
@@ -218,7 +218,7 @@ export default async function ExpertsPage({ searchParams }: ExpertsPageProps) {
             <span style={{ fontSize: 13, fontWeight: 600 }}>AstroLive Compass</span>
           </div>
           <div className="meta">
-            Sample astrologer profiles for demonstration · Outgoing links open AstroLive
+            Sample astrologer profiles · Outgoing links open AstroLive
           </div>
         </div>
       </footer>

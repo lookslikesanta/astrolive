@@ -56,7 +56,7 @@ export default function OnboardingPage() {
             </div>
             <h1 className="h1">A small amount of context, no account required.</h1>
             <p className="lead" style={{ margin: "8px auto 0", maxWidth: 520 }}>
-              Add a few details to calibrate your daily timing windows, or jump straight in with the demo profile.
+              Add a few details to personalize your daily timing windows, or jump straight in with the demo profile.
             </p>
           </div>
 
@@ -164,7 +164,7 @@ export default function OnboardingPage() {
                   }
                 />
                 <div className="help">
-                  Used locally to calibrate your timing windows. Stored only in this browser.
+                  Used locally for your session. Stored only in this browser.
                 </div>
               </div>
 

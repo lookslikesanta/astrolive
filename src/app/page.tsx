@@ -211,7 +211,7 @@ export default function HomePage() {
             <span style={{ fontWeight: 600, color: "var(--foreground)" }}>AstroLive Compass</span>
           </div>
           <div className="meta">
-            Sample astrological guidance for reflective daily planning · AstroLive Hackathon Prototype
+            Reflective astrological guidance for daily planning and meaningful moments.
           </div>
         </div>
       </footer>

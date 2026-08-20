@@ -25,7 +25,7 @@ export function AppHeader() {
     <header className="site-header">
       <div className="container header-row">
         <Link className="brand" href="/" aria-label="AstroLive Compass Home">
-          <CompassMark size={28} />
+          <CompassMark size={26} />
           <span>
             AstroLive <span className="brand-accent">Compass</span>
           </span>
@@ -40,8 +40,8 @@ export function AppHeader() {
           <Link className="nav-link" href="/experts">
             Experts
           </Link>
-          <Link className="btn btn-primary btn-sm" href="/onboarding" style={{ marginLeft: 6 }}>
-            Try demo
+          <Link className="btn btn-primary btn-sm" href="/onboarding" style={{ marginLeft: 4 }}>
+            Demo
           </Link>
         </nav>
       </div>

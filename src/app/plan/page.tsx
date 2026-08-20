@@ -409,7 +409,7 @@ export default function PlanPage() {
                         Who is part of this moment?
                       </div>
                       <p className="body" style={{ fontSize: 13, color: "var(--foreground-muted)", marginBottom: 12 }}>
-                        The shared link contains only safe moment context and names—never your birth details.
+                        The shared link contains only moment details and names—never your birth date or time.
                       </p>
 
                       <div className="field" style={{ marginBottom: 12 }}>
@@ -457,7 +457,7 @@ export default function PlanPage() {
                       borderRadius: "var(--radius-xs)",
                     }}
                   >
-                    Quick demo recommendation: Choose <strong>Difficult conversation</strong>, mark it <strong>Important</strong>, and keep timing flexible.
+                    Suggested focus: Choose <strong>Difficult conversation</strong>, mark it <strong>Important</strong>, and keep timing flexible.
                   </div>
                 </div>
               )}
