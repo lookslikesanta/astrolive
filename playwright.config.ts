@@ -15,16 +15,26 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "desktop-chromium",
+      name: "desktop-1440",
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 1440, height: 900 },
       },
     },
     {
-      name: "mobile-chromium",
+      name: "mobile-390",
       use: {
-        ...devices["Pixel 7"],
+        viewport: { width: 390, height: 844 },
+        userAgent:
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+      },
+    },
+    {
+      name: "mobile-375",
+      use: {
+        viewport: { width: 375, height: 667 },
+        userAgent:
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1",
       },
     },
   ],

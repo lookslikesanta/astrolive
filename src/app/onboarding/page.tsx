@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AppHeader } from "@/components/app-header";
+import { AppHeader, CompassMark } from "@/components/app-header";
 import { demoProfile } from "@/lib/demo-data";
 import { writeProfile } from "@/lib/storage";
 import type { UserProfile } from "@/types";
@@ -14,6 +14,12 @@ const emptyProfile: UserProfile = {
   birthPlace: "",
 };
 
+function todayIso() {
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60_000;
+  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+}
+
 export default function OnboardingPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile>(emptyProfile);
@@ -21,7 +27,7 @@ export default function OnboardingPage() {
 
   function continueWith(nextProfile: UserProfile) {
     if (!nextProfile.firstName.trim() || !nextProfile.birthDate) {
-      setError("Add your first name and date of birth to continue.");
+      setError("Please provide your first name and date of birth.");
       return;
     }
     writeProfile({
@@ -42,84 +48,138 @@ export default function OnboardingPage() {
       <AppHeader />
       <section className="page">
         <div className="narrow">
-          <div className="page-head">
-            <div className="page-head-copy">
-              <div className="eyebrow">Set your Compass</div>
-              <h1 className="h1">A small amount of context, no account required.</h1>
-              <p className="lead" style={{ fontSize: 18 }}>
-                In a production version, birth details would feed AstroLive&apos;s trusted astrology calculation layer. This prototype stores your demo profile only in this browser.
-              </p>
+          {/* Header */}
+          <div style={{ marginBottom: 32, textAlign: "center" }}>
+            <div className="eyebrow" style={{ marginBottom: 10, justifyContent: "center" }}>
+              <CompassMark size={16} />
+              <span>Set Your Compass</span>
             </div>
+            <h1 className="h1">A small amount of context, no account required.</h1>
+            <p className="lead" style={{ margin: "8px auto 0", maxWidth: 520 }}>
+              Add a few details to personalize your daily timing windows, or jump straight in with the demo profile.
+            </p>
           </div>
 
-          <div className="card" style={{ padding: "clamp(20px,4vw,32px)" }}>
+          {/* Quick Start Card */}
+          <div
+            className="tile"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              marginBottom: 24,
+              background: "var(--accent-soft)",
+              borderColor: "rgba(196, 130, 26, 0.25)",
+              flexWrap: "wrap",
+            }}
+          >
+            <div>
+              <div style={{ fontWeight: 700, color: "var(--accent-ink)", fontSize: 14 }}>
+                Instant Demo Profile
+              </div>
+              <div style={{ fontSize: 13, color: "var(--foreground-muted)", marginTop: 2 }}>
+                Load demo profile (Aarav, 14 Nov 1998, Lucknow) with one click.
+              </div>
+            </div>
+            <button
+              className="btn btn-accent btn-sm"
+              type="button"
+              onClick={() => continueWith(demoProfile)}
+            >
+              Use demo profile →
+            </button>
+          </div>
+
+          {/* Setup Form */}
+          <div className="surface-sheet">
             <form className="form-stack" onSubmit={submit}>
               <div className="field">
-                <label className="label" htmlFor="firstName">First name</label>
+                <label className="label" htmlFor="firstName">
+                  First name <span style={{ color: "var(--accent)" }}>*</span>
+                </label>
                 <input
                   className="input"
                   id="firstName"
                   autoComplete="given-name"
                   maxLength={60}
-                  placeholder="Your name"
+                  placeholder="e.g. Aarav"
                   value={profile.firstName}
-                  onChange={(event) => setProfile((current) => ({ ...current, firstName: event.target.value }))}
+                  onChange={(event) =>
+                    setProfile((current) => ({ ...current, firstName: event.target.value }))
+                  }
                 />
               </div>
 
-              <div className="card-grid-2">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                  gap: 16,
+                }}
+              >
                 <div className="field">
-                  <label className="label" htmlFor="birthDate">Date of birth</label>
+                  <label className="label" htmlFor="birthDate">
+                    Date of birth <span style={{ color: "var(--accent)" }}>*</span>
+                  </label>
                   <input
                     className="input"
                     id="birthDate"
                     type="date"
+                    max={todayIso()}
                     value={profile.birthDate}
-                    onChange={(event) => setProfile((current) => ({ ...current, birthDate: event.target.value }))}
+                    onChange={(event) =>
+                      setProfile((current) => ({ ...current, birthDate: event.target.value }))
+                    }
                   />
                 </div>
                 <div className="field">
-                  <label className="label" htmlFor="birthTime">Birth time <span className="muted">(optional)</span></label>
+                  <label className="label" htmlFor="birthTime">
+                    Birth time <span className="meta">(optional)</span>
+                  </label>
                   <input
                     className="input"
                     id="birthTime"
                     type="time"
                     value={profile.birthTime ?? ""}
-                    onChange={(event) => setProfile((current) => ({ ...current, birthTime: event.target.value }))}
+                    onChange={(event) =>
+                      setProfile((current) => ({ ...current, birthTime: event.target.value }))
+                    }
                   />
                 </div>
               </div>
 
               <div className="field">
-                <label className="label" htmlFor="birthPlace">Birthplace <span className="muted">(optional in demo)</span></label>
+                <label className="label" htmlFor="birthPlace">
+                  Birthplace <span className="meta">(optional)</span>
+                </label>
                 <input
                   className="input"
                   id="birthPlace"
                   maxLength={120}
-                  placeholder="City, state, country"
+                  placeholder="City, State, Country"
                   value={profile.birthPlace ?? ""}
-                  onChange={(event) => setProfile((current) => ({ ...current, birthPlace: event.target.value }))}
+                  onChange={(event) =>
+                    setProfile((current) => ({ ...current, birthPlace: event.target.value }))
+                  }
                 />
-                <div className="help">Used only to demonstrate what a future chart calculation would require. It is not sent to a server in this prototype.</div>
+                <div className="help">
+                  Used locally for your session. Stored only in this browser.
+                </div>
               </div>
 
-              {error ? <div className="error" role="alert">{error}</div> : null}
+              {error ? (
+                <div className="alert-error" role="alert">
+                  {error}
+                </div>
+              ) : null}
 
-              <div className="hero-actions">
-                <button className="btn btn-primary" type="submit">Continue to Today →</button>
-                <button
-                  className="btn btn-secondary"
-                  type="button"
-                  onClick={() => continueWith(demoProfile)}
-                >
-                  Use demo profile
+              <div style={{ display: "flex", gap: 12, marginTop: 6, flexWrap: "wrap" }}>
+                <button className="btn btn-primary" type="submit" style={{ flex: 1 }}>
+                  Continue to Today →
                 </button>
               </div>
             </form>
-          </div>
-
-          <div className="notice" style={{ marginTop: 18 }}>
-            <strong>Judge shortcut:</strong> “Use demo profile” loads Aarav from Lucknow so every screenshot and recommendation stays reproducible.
           </div>
         </div>
       </section>

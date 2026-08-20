@@ -324,11 +324,68 @@ Report-ready takeaway:
 
 The validation history gives the report a concrete engineering narrative: CI first caught unnecessary React state synchronization; the implementation was simplified; the production compiler passed; browser automation was then introduced; an ambiguous test locator was diagnosed as a QA issue rather than hidden; and the corrected journey passed on both desktop and mobile with screenshot, overflow, console, and runtime-error checks.
 
-## Known limitations after validated browser pass
+## Slice 8 — UI Refinement & Consumer Copy Polish (20 August 2026)
 
-- no production astrology calculation; fixtures are intentionally deterministic
-- no real accounts/backend/notifications
-- shared payload is readable by anyone who has the URL, so it intentionally excludes birth details
-- expert profiles are samples; the external handoff opens AstroLive rather than simulating a completed consultation
-- no public production deployment has been verified yet
-- public-deployment keyboard/accessibility smoke testing remains open
+Status: completed and verified
+
+Objectives:
+- Preserve the visual identity, typography contrast, bold cosmic panels, and structured card components of the core product.
+- Remove pitch-deck language, hackathon commentary, and developer architecture explanations from user-facing screens.
+- Implement mobile auto-scroll to results upon generation in Plan a Moment.
+- Add `max=today` constraint on birth date input in Onboarding.
+- Ensure end-to-end reliability across desktop (1440×900) and mobile (Pixel 7) viewports.
+
+Key changes:
+- `src/app/page.tsx`: Replaced pitch-deck bottom card copy ("Why this matters for AstroLive / Retention, sharing, monetization") with consumer benefit copy ("From daily clarity to moments that matter").
+- `src/app/onboarding/page.tsx`: Removed architecture commentary ("In a production version, birth details would feed..."), added `max` date validation.
+- `src/app/plan/page.tsx`: Added smooth scroll to the recommendation hero on mobile viewports so results are instantly visible.
+- `src/app/together/[id]/page.tsx`: Removed virality explanation ("The invitation is part of the product loop...") in favor of user-focused shared planning copy.
+- `src/app/experts/page.tsx`: Removed monetization deck text ("Business loop: Daily utility earns attention...") in favor of clear astrologer consultation value.
+
+Validation evidence:
+- Next.js Turbopack optimized production build: success in 2.5s.
+- TypeScript check: 0 errors.
+- ESLint: 0 errors, 0 warnings.
+- Playwright E2E suite: 2/2 tests passed across `desktop-chromium` (1440×900) and `mobile-chromium` (Pixel 7).
+- Zero console errors and zero unhandled page errors.
+
+## Known limitations
+
+- Deterministic demo guidance: Astrology calculations use sample signals rather than a real ephemeris engine.
+- Local profile storage: User profile details reside only in `localStorage` in the user's browser.
+- Safe share payload: Shared moment links encode only high-level moment context (title, category, date, names); private birth profile details are never transmitted in URLs.
+- Sample astrologer profiles: The experts page displays illustrative profiles; the action links out to the live AstroLive app.
+- Static client-side routing: No backend server, database, or external auth required.
+
+## Slice 9 — Calm Editorial Redesign & Visual De-SaaSification (20 August 2026)
+
+Status: completed and verified
+
+Objectives:
+- Remove generic AI/SaaS visual template patterns (excessive card-stacking, rounded rectangle nesting, pill clouds, repetitive eyebrow-heading-paragraph-CTA rhythms).
+- Establish an intentional editorial typographic hierarchy using `Newsreader` (editorial display serif) and `Plus Jakarta Sans` (crisp UI sans).
+- Transform the Landing page from a 4-box SaaS grid into a fluid connected journey narrative.
+- Redesign the Today screen from a dashboard into an editorial daily briefing with a unified continuous Time Rail (Morning, Afternoon, Evening).
+- Restructure Plan a Moment into a progressive disclosure flow with an unboxed, dynamic result hierarchy.
+- Convert Shared Moments into a warm, human two-person planning canvas.
+- Remove unsupported claims ("verified astrologer") and all remaining pitch-deck / hackathon terms across the UI.
+
+Key changes:
+- `src/app/layout.tsx`: Configured `Newsreader` and `Plus Jakarta Sans` with `next/font/google` variables `--font-display` and `--font-sans`.
+- `src/app/globals.css`: Rebuilt design system with warm linen palette (`#f7f4ee`), midnight indigo (`#16142e`), saffron gold (`#c4821a`), mineral sage (`#1a5b5d`), continuous `.time-rail`, tactile `.tile-interactive`, and reduced box-nesting.
+- `src/components/app-header.tsx`: Refined site header with custom geometric CompassMark and responsive navigation links.
+- `src/app/page.tsx`: Rewrote Landing page with clear editorial headline, live preview panel, 4-step continuous rhythm, and direct entry actions.
+- `src/app/onboarding/page.tsx`: Streamlined onboarding with 1-click sample profile quick-start and `max=today` birth date constraint.
+- `src/app/today/page.tsx`: Editorial daily briefing centered on "A better day for clarity than speed.", bulleted guidance lists, continuous day progression, and upcoming focus integration.
+- `src/app/plan/page.tsx`: Progressive disclosure for category choice and context inputs, category switching without state erasure, unboxed result hierarchy, and reduced-motion-safe auto-scroll.
+- `src/app/together/[id]/page.tsx`: Warm collaborative canvas for "Aarav & Mira" with shared timing window and dual-column guidance.
+- `src/app/experts/page.tsx`: Context-first handoff ("Carrying context for: Talk with Mira about moving cities"), transparent sample profile badges, and direct "Consult on AstroLive ↗" links.
+
+Validation evidence:
+- Next.js Turbopack optimized production build: success in 2.5s.
+- TypeScript check: 0 errors.
+- ESLint: 0 errors.
+- Playwright E2E test suite: 2/2 tests passed across `desktop-chromium` (1440×900) and `mobile-chromium` (Pixel 7).
+- In-app browser audit: verified across desktop (1440×900) and mobile (390×844) with full-page visual evidence.
+
+

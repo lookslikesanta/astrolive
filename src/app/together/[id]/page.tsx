@@ -1,16 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-import { AppHeader } from "@/components/app-header";
+import { use, useMemo, useState } from "react";
+import { AppHeader, CompassMark } from "@/components/app-header";
 import { categoryLabels, sharedGuidance } from "@/lib/demo-data";
 import { decodeSharedMoment } from "@/lib/share";
 
-export default function SharedMomentPage() {
-  const params = useParams<{ id: string }>();
+export default function SharedMomentPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
   const [copied, setCopied] = useState(false);
-  const payload = useMemo(() => decodeSharedMoment(params.id), [params.id]);
+  const payload = useMemo(() => decodeSharedMoment(resolvedParams.id), [resolvedParams.id]);
 
   const expertHref = useMemo(() => {
     if (!payload) return "/experts";
@@ -22,7 +21,7 @@ export default function SharedMomentPage() {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 2200);
+      setTimeout(() => setCopied(false), 2200);
     } catch {
       setCopied(false);
     }
@@ -34,11 +33,17 @@ export default function SharedMomentPage() {
         <AppHeader />
         <section className="page">
           <div className="narrow">
-            <div className="card">
-              <div className="eyebrow">Shared Moment</div>
-              <h1 className="h2" style={{ marginTop: 12 }}>This shared link is incomplete or no longer valid.</h1>
-              <p className="body">No private profile data is required to recover it. Create a new moment instead.</p>
-              <Link className="btn btn-primary" href="/plan">Plan a new moment →</Link>
+            <div className="surface-sheet" style={{ textAlign: "center", padding: "44px 28px" }}>
+              <CompassMark size={32} />
+              <h1 className="h2" style={{ marginTop: 14, marginBottom: 8 }}>
+                This shared link is incomplete or no longer valid
+              </h1>
+              <p className="body" style={{ marginBottom: 20 }}>
+                No private profile information is required to recover it. You can plan a new moment instead.
+              </p>
+              <Link className="btn btn-primary" href="/plan">
+                Plan a new moment →
+              </Link>
             </div>
           </div>
         </section>
@@ -46,68 +51,174 @@ export default function SharedMomentPage() {
     );
   }
 
+  const formattedDate = new Intl.DateTimeFormat("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(`${payload.date}T12:00:00`));
+
   return (
     <main className="shell">
       <AppHeader />
+
       <section className="page">
         <div className="narrow">
-          <div className="page-head">
-            <div className="page-head-copy">
-              <div className="eyebrow">Together · {categoryLabels[payload.category]}</div>
-              <h1 className="h1">{payload.creator} + {payload.collaborator}</h1>
-              <p className="lead" style={{ fontSize: 18 }}>
-                {payload.title} · {new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "long", year: "numeric" }).format(new Date(`${payload.date}T12:00:00`))}
-              </p>
+          {/* Top Header */}
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <div className="eyebrow" style={{ justifyContent: "center", marginBottom: 6 }}>
+              <CompassMark size={16} />
+              <span>Together · {categoryLabels[payload.category]}</span>
             </div>
+
+            <h1 className="h1">
+              {payload.creator} <span className="serif-italic">&</span> {payload.collaborator}
+            </h1>
+
+            <p className="lead" style={{ margin: "6px auto 0", fontSize: 17 }}>
+              {payload.title} · {formattedDate}
+            </p>
           </div>
 
-          <article className="result-hero">
-            <div className="result-label">Shared Compass</div>
-            <h2 className="result-headline">{sharedGuidance.headline}</h2>
-            <div className="window-box" style={{ maxWidth: 360 }}>
-              <span className="result-label">Shared supportive window</span>
-              <strong>{sharedGuidance.sharedWindow}</strong>
+          {/* Shared Guidance Canvas */}
+          <div className="surface-sheet" style={{ marginBottom: 20 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+              <span className="eyebrow">Shared Compass</span>
+              <span className="meta">Combined Timing</span>
             </div>
-          </article>
 
-          <div className="card-grid-2" style={{ marginTop: 18 }}>
-            <section className="card card-supportive">
-              <div className="eyebrow">What works well</div>
-              <ul className="list" style={{ marginTop: 16 }}>
-                {sharedGuidance.worksWell.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </section>
-            <section className="card card-caution" style={{ marginTop: 0 }}>
-              <div className="eyebrow">Take care with</div>
-              <ul className="list" style={{ marginTop: 16 }}>
-                {sharedGuidance.takeCareWith.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </section>
-          </div>
+            <h2
+              className="font-display"
+              style={{
+                fontSize: "clamp(24px, 3.2vw, 34px)",
+                fontWeight: 400,
+                lineHeight: 1.15,
+                color: "var(--primary)",
+                margin: "0 0 18px",
+              }}
+            >
+              {sharedGuidance.headline}
+            </h2>
 
-          <section className="card" style={{ marginTop: 18 }}>
-            <div className="card-head">
+            {/* Shared Window Box */}
+            <div
+              style={{
+                display: "inline-flex",
+                flexDirection: "column",
+                gap: 3,
+                padding: "10px 18px",
+                background: "var(--supportive-soft)",
+                borderRadius: "var(--radius-xs)",
+                border: "1px solid rgba(26, 91, 93, 0.18)",
+                marginBottom: 20,
+              }}
+            >
+              <span style={{ fontSize: 11.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--supportive-ink)" }}>
+                Shared Supportive Window
+              </span>
+              <span style={{ fontSize: 17, fontWeight: 700, color: "var(--supportive-ink)" }}>
+                {sharedGuidance.sharedWindow}
+              </span>
+            </div>
+
+            {/* Two Column Strengths & Cautions */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                gap: 20,
+                paddingTop: 18,
+                borderTop: "1px solid var(--border-hairline)",
+              }}
+            >
               <div>
-                <div className="eyebrow">Why sharing matters</div>
-                <h2 className="h3" style={{ marginTop: 9 }}>The invitation is part of the product loop.</h2>
+                <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--supportive)", marginBottom: 10 }}>
+                  What works well
+                </div>
+                <ul className="guidance-list">
+                  {sharedGuidance.worksWell.map((item, index) => (
+                    <li className="guidance-item" key={index}>
+                      <span className="guidance-item-bullet supportive" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--caution)", marginBottom: 10 }}>
+                  Things to watch
+                </div>
+                <ul className="guidance-list">
+                  {sharedGuidance.takeCareWith.map((item, index) => (
+                    <li className="guidance-item" key={index}>
+                      <span className="guidance-item-bullet caution" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
-            <p className="body">
-              A useful shared result gives the invited person a reason to open AstroLive, understand the context, and create their own Compass. The production version could calculate both people&apos;s trusted astrology signals before generating this combined guidance.
-            </p>
-            <div className="hero-actions">
-              <button className="btn btn-secondary" type="button" onClick={copyLink}>{copied ? "Link copied ✓" : "Copy shared link"}</button>
-              <Link className="btn btn-primary" href="/onboarding">Create your own Compass →</Link>
-              <Link className="btn btn-ghost" href={expertHref}>Ask an expert</Link>
-            </div>
-            {copied ? <div className="success" style={{ marginTop: 14 }} role="status">This URL can be opened in another browser because it contains only safe moment context—not birth details.</div> : null}
-          </section>
+          </div>
 
-          <p className="disclosure">
-            Prototype note: combined guidance is deterministic demo content. The share payload includes names and moment details only; private birth profile fields are not encoded in the URL.
-          </p>
+          {/* Action Row for Creator & Invitee */}
+          <div
+            className="tile"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 16,
+              flexWrap: "wrap",
+              background: "var(--surface-subtle)",
+              marginBottom: 16,
+            }}
+          >
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 14 }}>
+                Shared moment with {payload.collaborator}
+              </div>
+              <div className="meta" style={{ marginTop: 2 }}>
+                Copy this link to share, or create your own Compass.
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <button
+                className="btn btn-secondary btn-sm"
+                type="button"
+                onClick={copyLink}
+              >
+                {copied ? "Link copied ✓" : "Copy shared link"}
+              </button>
+              <Link className="btn btn-primary btn-sm" href="/onboarding">
+                Create your own Compass →
+              </Link>
+              <Link className="btn btn-ghost btn-sm" href={expertHref}>
+                Ask an expert
+              </Link>
+            </div>
+          </div>
+
+          {copied ? (
+            <div className="alert-success" role="status" style={{ textAlign: "center", marginBottom: 16 }}>
+              Link copied. This URL contains only moment details and names—never birth details.
+            </div>
+          ) : null}
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="container footer-row">
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <CompassMark size={16} />
+            <span style={{ fontSize: 13, fontWeight: 600 }}>AstroLive Compass</span>
+          </div>
+          <div className="meta">
+            Shared moment planning · Collaborative guidance
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

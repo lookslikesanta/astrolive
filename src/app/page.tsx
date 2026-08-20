@@ -1,64 +1,103 @@
 import Link from "next/link";
 import { AppHeader, CompassMark } from "@/components/app-header";
 
-const loop = [
-  ["01", "Today", "Turn the day into one clear action, not a wall of predictions."],
-  ["02", "Plan", "Choose a meaningful moment and compare stronger and weaker windows."],
-  ["03", "Together", "Invite someone when the moment is shared and unlock combined guidance."],
-  ["04", "Expert", "Escalate high-intent decisions into AstroLive's human consultation layer."],
-];
-
 export default function HomePage() {
   return (
     <main className="shell">
       <AppHeader />
-      <section className="hero">
-        <div className="container hero-grid">
-          <div className="hero-copy">
-            <div className="eyebrow">AstroHack 2026 prototype</div>
-            <h1 className="display">Plan with the day, not against it.</h1>
-            <p className="lead">
-              AstroLive Compass turns astrology into a practical planning layer: understand today,
-              choose a better window for what matters, include someone when the moment is shared,
-              and ask a human expert when the decision deserves more depth.
-            </p>
-            <div className="hero-actions">
-              <Link className="btn btn-primary" href="/onboarding">Try the demo →</Link>
-              <a className="btn btn-secondary" href="#how-it-works">See how it works</a>
-            </div>
-            <p className="meta">
-              No signup required. The judge flow uses deterministic demo astrology signals so the
-              prototype stays reproducible and transparent.
-            </p>
-          </div>
 
-          <div className="hero-panel" aria-label="Preview of today's Compass">
-            <div className="panel-content">
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 34 }}>
-                  <CompassMark />
-                  <span style={{ color: "#d8d5ec", fontWeight: 700 }}>Today&apos;s Compass</span>
+      {/* Hero Section */}
+      <section className="section" style={{ paddingTop: 44, paddingBottom: 56 }}>
+        <div className="container">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 460px), 1fr))",
+              gap: "40px 56px",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <div className="eyebrow">
+                <CompassMark size={16} />
+                <span>Daily Timing & Planning</span>
+              </div>
+
+              <h1 className="display">
+                Plan with the day, <span className="serif-italic">not against it.</span>
+              </h1>
+
+              <p className="lead">
+                AstroLive Compass turns astrology into a practical planning rhythm: understand today,
+                choose a supportive window for important moments, include others in shared decisions,
+                and connect with an astrologer when you need deeper context.
+              </p>
+
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center", marginTop: 4 }}>
+                <Link className="btn btn-primary" href="/onboarding">
+                  Try the demo →
+                </Link>
+                <Link className="btn btn-secondary" href="/plan">
+                  Plan a moment
+                </Link>
+              </div>
+
+              <div className="meta" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)", display: "inline-block" }} />
+                <span>No signup required · Instant sample profile ready to explore</span>
+              </div>
+            </div>
+
+            {/* Editorial Live Preview Panel */}
+            <div
+              className="surface-midnight"
+              style={{ padding: "clamp(24px, 3.5vw, 32px)" }}
+              aria-label="Preview of today's Compass guidance"
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255, 255, 255, 0.12)", paddingBottom: 14, marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <CompassMark size={22} />
+                  <span style={{ fontWeight: 600, fontSize: 13.5, color: "var(--foreground-on-midnight)" }}>Today&apos;s Compass</span>
                 </div>
-                <div className="result-label">Today · Your day</div>
-                <div style={{ fontSize: "clamp(32px,4vw,52px)", lineHeight: 1.02, fontWeight: 820, letterSpacing: "-.04em", marginTop: 14 }}>
+                <span style={{ fontSize: 12, color: "var(--accent)", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                  Daily Focus
+                </span>
+              </div>
+
+              <div style={{ marginBottom: 20 }}>
+                <div className="meta" style={{ color: "var(--accent)", marginBottom: 6 }}>
+                  Today · Your day
+                </div>
+                <h2
+                  className="font-display"
+                  style={{
+                    fontSize: "clamp(24px, 3vw, 32px)",
+                    fontWeight: 400,
+                    lineHeight: 1.15,
+                    color: "#ffffff",
+                    margin: "0 0 10px",
+                  }}
+                >
                   A better day for clarity than speed.
-                </div>
-                <p style={{ color: "#d8d5ec", lineHeight: 1.55, marginTop: 18, maxWidth: 470 }}>
-                  Put patient conversations and focused work earlier. Keep important decisions reversible in the afternoon.
+                </h2>
+                <p style={{ color: "var(--foreground-on-midnight-muted)", fontSize: 14, lineHeight: 1.5, margin: 0 }}>
+                  Put patient conversations and focused work earlier. Keep important commitments flexible in the afternoon.
                 </p>
               </div>
-              <div>
-                <div className="hero-window">
-                  <div className="hero-time">8:30–11</div>
-                  <div className="hero-note">Supportive for planning, preparation, and focused work.</div>
+
+              {/* Time slots preview */}
+              <div style={{ display: "grid", gap: 10, borderTop: "1px solid rgba(255, 255, 255, 0.08)", paddingTop: 16 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "95px 1fr", gap: 12, alignItems: "baseline" }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#a5e2df" }}>8:30–11:00 AM</span>
+                  <span style={{ fontSize: 13, color: "var(--foreground-on-midnight-muted)" }}>Supportive for planning, preparation, and focused work.</span>
                 </div>
-                <div className="hero-window">
-                  <div className="hero-time">1:30–3:30</div>
-                  <div className="hero-note">Use more caution with commitments that are hard to reverse.</div>
+                <div style={{ display: "grid", gridTemplateColumns: "95px 1fr", gap: 12, alignItems: "baseline" }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#f7cc9c" }}>1:30–3:30 PM</span>
+                  <span style={{ fontSize: 13, color: "var(--foreground-on-midnight-muted)" }}>Use more caution with commitments that are hard to reverse.</span>
                 </div>
-                <div className="hero-window">
-                  <div className="hero-time">6:00–8:00</div>
-                  <div className="hero-note">A steadier window for conversation and reflection.</div>
+                <div style={{ display: "grid", gridTemplateColumns: "95px 1fr", gap: 12, alignItems: "baseline" }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#d5d1ea" }}>6:00–8:00 PM</span>
+                  <span style={{ fontSize: 13, color: "var(--foreground-on-midnight-muted)" }}>A steadier window for conversation and reflection.</span>
                 </div>
               </div>
             </div>
@@ -66,55 +105,114 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" id="how-it-works">
+      {/* The 4-Step Connected Product Journey */}
+      <section className="section" style={{ background: "var(--surface-subtle)", borderTop: "1px solid var(--border-subtle)", borderBottom: "1px solid var(--border-subtle)" }}>
         <div className="container">
-          <div style={{ display: "grid", gap: 16, marginBottom: 34 }}>
-            <div className="eyebrow">One connected product loop</div>
-            <h2 className="h2">From a daily check-in to a moment worth sharing.</h2>
-            <p className="lead" style={{ fontSize: 18 }}>
-              Compass adds a behavioral layer on top of AstroLive&apos;s existing astrology utilities and expert marketplace instead of duplicating them.
+          <div style={{ maxWidth: 620, marginBottom: 36 }}>
+            <div className="eyebrow">The Continuous Rhythm</div>
+            <h2 className="h2" style={{ marginTop: 8 }}>From a daily check-in to a moment worth sharing.</h2>
+            <p className="body" style={{ marginTop: 8 }}>
+              Compass bridges personal reflection, practical timing, and astrologer expertise into one connected journey.
             </p>
           </div>
-          <div className="loop">
-            {loop.map(([number, title, copy]) => (
-              <div className="loop-item" key={number}>
-                <div className="loop-number">{number}</div>
-                <div className="loop-title">{title}</div>
-                <div className="loop-copy">{copy}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="section" style={{ paddingTop: 0 }}>
-        <div className="container">
-          <div className="card card-strong" style={{ padding: "clamp(28px,5vw,52px)", borderRadius: 28 }}>
-            <div className="card-grid-2" style={{ alignItems: "end" }}>
-              <div>
-                <div className="result-label">Why this matters for AstroLive</div>
-                <h2 className="h2" style={{ marginTop: 14, color: "white" }}>
-                  Retention, sharing, and monetization reinforce each other.
-                </h2>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+              gap: 16,
+            }}
+          >
+            <div className="tile" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span className="eyebrow">01 · Morning</span>
+                <span style={{ fontSize: 12, color: "var(--foreground-subtle)" }}>Daily</span>
               </div>
-              <div>
-                <p style={{ color: "#d8d5ec", lineHeight: 1.65, marginTop: 0 }}>
-                  Today creates a reason to return. Shared Moments turn useful planning into an invitation loop. Complex, high-intent moments naturally lead into human astrologer consultation.
-                </p>
-                <Link className="btn btn-dark" href="/onboarding">Start with the demo profile →</Link>
+              <h3 className="h3">Today</h3>
+              <p className="body" style={{ fontSize: 13.5 }}>
+                Start with one clear action recommendation and supportive timing windows for the day.
+              </p>
+            </div>
+
+            <div className="tile" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span className="eyebrow">02 · Planning</span>
+                <span style={{ fontSize: 12, color: "var(--foreground-subtle)" }}>Utility</span>
               </div>
+              <h3 className="h3">Plan a Moment</h3>
+              <p className="body" style={{ fontSize: 13.5 }}>
+                Choose a meaningful moment and compare stronger and caution windows with preparation guidance.
+              </p>
+            </div>
+
+            <div className="tile" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span className="eyebrow">03 · Collaboration</span>
+                <span style={{ fontSize: 12, color: "var(--foreground-subtle)" }}>Together</span>
+              </div>
+              <h3 className="h3">Shared Moments</h3>
+              <p className="body" style={{ fontSize: 13.5 }}>
+                Invite someone when the moment is shared and unlock combined timing without exposing private birth details.
+              </p>
+            </div>
+
+            <div className="tile" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span className="eyebrow">04 · Escalation</span>
+                <span style={{ fontSize: 12, color: "var(--foreground-subtle)" }}>Guidance</span>
+              </div>
+              <h3 className="h3">Astrologer Handoff</h3>
+              <p className="body" style={{ fontSize: 13.5 }}>
+                Continue from your planned moment to an AstroLive astrologer when the decision deserves more depth.
+              </p>
             </div>
           </div>
-          <p className="disclosure">
-            Hackathon prototype: guidance is generated from deterministic demo astrology signals, not a production birth-chart engine. Astrology is presented as reflective guidance, not certainty.
-          </p>
         </div>
       </section>
 
+      {/* Experience Flow Action Sheet */}
+      <section className="section">
+        <div className="container">
+          <div
+            className="surface-sheet"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 28,
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ maxWidth: 540 }}>
+              <h2 className="h2" style={{ margin: "0 0 8px" }}>
+                From daily clarity to moments that matter.
+              </h2>
+              <p className="body">
+                Today creates a daily rhythm. Shared Moments make timing collaborative. When decisions matter most, connect directly with an astrologer on AstroLive.
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <Link className="btn btn-primary" href="/onboarding">
+                Start with demo profile →
+              </Link>
+              <Link className="btn btn-secondary" href="/today">
+                Go to Today
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
       <footer className="footer">
         <div className="container footer-row">
-          <span>AstroLive Compass · AstroHack 2026</span>
-          <span>Action-first astrology for meaningful moments.</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <CompassMark size={18} />
+            <span style={{ fontWeight: 600, color: "var(--foreground)" }}>AstroLive Compass</span>
+          </div>
+          <div className="meta">
+            Reflective astrological guidance for daily planning and meaningful moments.
+          </div>
         </div>
       </footer>
     </main>

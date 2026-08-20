@@ -1,9 +1,21 @@
 import Link from "next/link";
 
-export function CompassMark() {
+export function CompassMark({ size = 26 }: { size?: number }) {
   return (
-    <span className="compass-mark" aria-hidden="true">
-      <span className="compass-needle" />
+    <span
+      className="compass-mark"
+      style={{ width: size, height: size }}
+      aria-hidden="true"
+    >
+      <span
+        className="compass-mark-inner"
+        style={{ width: size * 0.54, height: size * 0.54 }}
+      />
+      <span
+        className="compass-mark-needle"
+        style={{ height: size * 0.56 }}
+      />
+      <span className="compass-mark-center" />
     </span>
   );
 }
@@ -11,16 +23,33 @@ export function CompassMark() {
 export function AppHeader() {
   return (
     <header className="site-header">
-      <div className="container header-row">
-        <Link className="brand" href="/">
-          <CompassMark />
-          <span>AstroLive <span className="brand-sub">Compass</span></span>
-        </Link>
-        <nav className="nav" aria-label="Primary navigation">
-          <Link href="/today">Today</Link>
-          <Link href="/plan">Plan</Link>
-          <Link href="/experts">Experts</Link>
-          <Link className="btn btn-primary" href="/onboarding">Try demo</Link>
+      <div className="container header-container">
+        <div className="header-primary-row">
+          <Link className="brand" href="/" aria-label="AstroLive Compass Home">
+            <CompassMark size={26} />
+            <span>
+              AstroLive <span className="brand-accent">Compass</span>
+            </span>
+          </Link>
+          <div className="header-actions">
+            <Link className="btn btn-primary btn-sm header-demo-btn" href="/onboarding">
+              Demo
+            </Link>
+          </div>
+        </div>
+        <nav className="nav-links" aria-label="Primary navigation">
+          <Link className="nav-link" href="/today">
+            Today
+          </Link>
+          <Link className="nav-link" href="/plan">
+            Plan
+          </Link>
+          <Link className="nav-link" href="/experts">
+            Experts
+          </Link>
+          <Link className="btn btn-primary btn-sm desktop-demo-btn" href="/onboarding" style={{ marginLeft: 4 }}>
+            Demo
+          </Link>
         </nav>
       </div>
     </header>
